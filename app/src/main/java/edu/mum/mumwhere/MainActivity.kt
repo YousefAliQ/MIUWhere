@@ -3,6 +3,7 @@ package edu.mum.mumwhere
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
@@ -174,18 +175,30 @@ class MainActivity : AppCompatActivity() {
         mMapView.dispose()
     }
 
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+
+        // Checks the orientation of the screen
+        /*
+        if (newConfig.orientation === Configuration.ORIENTATION_LANDSCAPE) {
+            Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show()
+        } else if (newConfig.orientation === Configuration.ORIENTATION_PORTRAIT) {
+            Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show()
+        }*/
+    }
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String?>,
         grantResults: IntArray
     ) { // If request is cancelled, the result arrays are empty.
-        if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) { // Location permission was granted. This would have been triggered in response to failing to start the
-// LocationDisplay, so try starting this again.
+        if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            // Location permission was granted. This would have been triggered in response to failing to start the
+            // LocationDisplay, so try starting this again.
             mLocationDisplay!!.startAsync()
         } else { // If permission was denied, show toast to inform user what was chosen. If LocationDisplay is started again,
-// request permission UX will be shown again, option should be shown to allow never showing the UX again.
-// Alternative would be to disable functionality so request is not shown again.
+            // request permission UX will be shown again, option should be shown to allow never showing the UX again.
+            // Alternative would be to disable functionality so request is not shown again.
             Toast.makeText(
                 this@MainActivity,
                 resources.getString(R.string.location_permission_denied),
@@ -195,6 +208,8 @@ class MainActivity : AppCompatActivity() {
             mSpinner!!.setSelection(0, true)
         }
     }
+
+
     private fun addGraphicsOverlay(mapView: MapView): GraphicsOverlay? { //create the graphics overlay
 
         val graphicsOverlay = GraphicsOverlay()

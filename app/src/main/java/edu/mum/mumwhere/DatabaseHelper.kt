@@ -101,8 +101,8 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         val TABLE_NAME = "buildings"
         val ID = "ID"
         val NAME = "NAME"
-        val COORDX = "DESIG"
-        val COORDY = "DEPT"
+        val COORDX = "COORDX"
+        val COORDY = "COORDY"
     }
 }
 //end
