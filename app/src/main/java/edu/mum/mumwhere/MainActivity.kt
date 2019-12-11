@@ -2,15 +2,19 @@ package edu.mum.mumwhere
 
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.menu.MenuBuilder
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.esri.arcgisruntime.geometry.Point
@@ -160,6 +164,29 @@ class MainActivity : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
     }
+
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu,menu)
+        // Code to get the title and icon on the option overflow
+        if (menu is MenuBuilder) {
+            menu.setOptionalIconsVisible(true)
+        }
+        return super.onCreateOptionsMenu(menu)
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem):Boolean {
+        Toast.makeText(
+            applicationContext,
+            item.title.toString(),
+            Toast.LENGTH_LONG).show()
+
+        var i = Intent(this, LoginActivity::class.java)
+        startActivity(i)
+        return super.onOptionsItemSelected(item)
+    }
+
 
     override fun onPause() {
         super.onPause()
