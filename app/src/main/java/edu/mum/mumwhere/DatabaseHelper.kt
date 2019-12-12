@@ -24,7 +24,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
 
     /**
      * Let's create Our onUpgrade method
-     * Called when the database needs to be upgraded. The implementation should
+     * Called when the dataase needs to be upgraded. The implementation should
      * use this method to drop tables, add tables, or do anything else it needs
      * to upgrade to the new schema version.
      */
@@ -101,8 +101,8 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         val TABLE_NAME = "buildings"
         val ID = "ID"
         val NAME = "NAME"
-        val COORDX = "DESIG"
-        val COORDY = "DEPT"
+        val COORDX = "COORDX"
+        val COORDY = "COORDY"
     }
 }
 //end

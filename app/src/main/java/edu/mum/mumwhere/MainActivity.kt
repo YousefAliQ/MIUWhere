@@ -2,15 +2,20 @@ package edu.mum.mumwhere
 
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.menu.MenuBuilder
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.esri.arcgisruntime.geometry.Point
@@ -161,6 +166,29 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu,menu)
+        // Code to get the title and icon on the option overflow
+        if (menu is MenuBuilder) {
+            menu.setOptionalIconsVisible(true)
+        }
+        return super.onCreateOptionsMenu(menu)
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem):Boolean {
+        Toast.makeText(
+            applicationContext,
+            item.title.toString(),
+            Toast.LENGTH_LONG).show()
+
+        var i = Intent(this, LoginActivity::class.java)
+        startActivity(i)
+        return super.onOptionsItemSelected(item)
+    }
+
+
     override fun onPause() {
         super.onPause()
         mMapView.pause()
@@ -174,18 +202,30 @@ class MainActivity : AppCompatActivity() {
         mMapView.dispose()
     }
 
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+
+        // Checks the orientation of the screen
+        /*
+        if (newConfig.orientation === Configuration.ORIENTATION_LANDSCAPE) {
+            Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show()
+        } else if (newConfig.orientation === Configuration.ORIENTATION_PORTRAIT) {
+            Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show()
+        }*/
+    }
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String?>,
         grantResults: IntArray
     ) { // If request is cancelled, the result arrays are empty.
-        if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) { // Location permission was granted. This would have been triggered in response to failing to start the
-// LocationDisplay, so try starting this again.
+        if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            // Location permission was granted. This would have been triggered in response to failing to start the
+            // LocationDisplay, so try starting this again.
             mLocationDisplay!!.startAsync()
         } else { // If permission was denied, show toast to inform user what was chosen. If LocationDisplay is started again,
-// request permission UX will be shown again, option should be shown to allow never showing the UX again.
-// Alternative would be to disable functionality so request is not shown again.
+            // request permission UX will be shown again, option should be shown to allow never showing the UX again.
+            // Alternative would be to disable functionality so request is not shown again.
             Toast.makeText(
                 this@MainActivity,
                 resources.getString(R.string.location_permission_denied),
@@ -195,6 +235,8 @@ class MainActivity : AppCompatActivity() {
             mSpinner!!.setSelection(0, true)
         }
     }
+
+
     private fun addGraphicsOverlay(mapView: MapView): GraphicsOverlay? { //create the graphics overlay
 
         val graphicsOverlay = GraphicsOverlay()
