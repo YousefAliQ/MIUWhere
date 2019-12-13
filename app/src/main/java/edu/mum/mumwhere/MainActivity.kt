@@ -9,6 +9,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
@@ -22,16 +23,14 @@ import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.SpatialReference
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
-import com.esri.arcgisruntime.mapping.view.Graphic
-import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
-import com.esri.arcgisruntime.mapping.view.LocationDisplay
+import com.esri.arcgisruntime.mapping.view.*
 import com.esri.arcgisruntime.mapping.view.LocationDisplay.DataSourceStatusChangedListener
-import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol
 import com.esri.arcgisruntime.symbology.TextSymbol
 import edu.mum.mumwhere.spinner.ItemData
 import edu.mum.mumwhere.spinner.SpinnerAdapter
+import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
 
@@ -40,6 +39,7 @@ class MainActivity : AppCompatActivity() {
     private val wgs84 = SpatialReference.create(4236)
     private lateinit var mMapView: MapView
     private var mLocationDisplay: LocationDisplay? = null
+    var graphicsOverlay: GraphicsOverlay? = null
     private var mSpinner: Spinner? = null
 
     private val requestCode = 2
@@ -53,7 +53,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // Get the Spinner from layout
-        // Get the Spinner from layout
         mSpinner = findViewById<View>(R.id.spinner) as Spinner
 
         // inflate MapView from layout
@@ -61,16 +60,35 @@ class MainActivity : AppCompatActivity() {
 
         val map = ArcGISMap(Basemap.Type.IMAGERY,41.01614713668823,-91.96762561798096, 17)
 
+        // add graphics overlay to MapView.
+        graphicsOverlay = addGraphicsOverlay(mMapView)
+
+
+        // add a listener to the MapView to detect when a user has performed a single tap to add a new feature to
+        // the service feature table
+        mapView.setOnTouchListener(object : DefaultMapViewOnTouchListener(this, mapView) {
+            override fun onSingleTapConfirmed(event: MotionEvent): Boolean { // create a point from where the user clicked
+                val point =
+                    android.graphics.Point(event.x.toInt(), event.y.toInt())
+                // create a map point from a point
+                val mapPoint =
+                    mMapView.screenToLocation(point)
+                // add a new feature to the service feature table
+                addFeature(mapPoint)
+                return super.onSingleTapConfirmed(event)
+            }
+        })
+
         // set the map to be displayed in the layout's MapView
         mMapView.map = map
 
         // add graphics overlay to MapView.
         val graphicsOverlay: GraphicsOverlay? = addGraphicsOverlay(mMapView)
         //add some buoy positions to the graphics overlay
-        addBuoyPoints(graphicsOverlay!!)
+        //addBuoyPoints(graphicsOverlay!!)
 
         //add text symbols and points to graphics overlay
-        addText(graphicsOverlay)
+        //addText(graphicsOverlay)
 
         // TODO : mapping function to fix the shifting issue
         //-91.96765780448914,41.015310287475586
@@ -115,7 +133,6 @@ class MainActivity : AppCompatActivity() {
         })
 
 
-        // Populate the list for the Location display options for the spinner's Adapter
         // Populate the list for the Location display options for the spinner's Adapter
         val list: ArrayList<ItemData> = ArrayList<ItemData>()
         list.add(ItemData("Stop", R.drawable.locationdisplaydisabled))
@@ -164,6 +181,28 @@ class MainActivity : AppCompatActivity() {
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
+    }
+
+
+    /**
+     * Adds a new Feature to a ServiceFeatureTable and applies the changes to the
+     * server.
+     *
+     * @param mapPoint     location to add feature
+     * @param featureTable service feature table to add feature
+     */
+    private fun addFeature(
+        mapPoint: com.esri.arcgisruntime.geometry.Point
+    ) { // create default attributes for the feature
+        val attributes: MutableMap<String, Any> =
+            HashMap()
+        attributes["newPlace"] = "New place!"
+        attributes["primcause"] = "Earthquake"
+
+        addBuoyPoints(graphicsOverlay!!, mapPoint, attributes)
+
+        addText(graphicsOverlay!!, mapPoint, attributes)
+
     }
 
 
@@ -245,7 +284,7 @@ class MainActivity : AppCompatActivity() {
         return graphicsOverlay
     }
 
-    private fun addBuoyPoints(graphicOverlay: GraphicsOverlay) { //define the buoy locations
+    /*private fun addBuoyPoints(graphicOverlay: GraphicsOverlay) { //define the buoy locations
 
         val buoy1Loc =
             Point(-91.95978283882141,41.023335456848145, wgs84)
@@ -280,6 +319,132 @@ class MainActivity : AppCompatActivity() {
 
         //add the text to the graphics overlay
         graphicOverlay.graphics.add(bassRockGraphic)
+    }*/
+
+    private fun addBuoyPoints(graphicOverlay: GraphicsOverlay, point:com.esri.arcgisruntime.geometry.Point, attr: MutableMap<String, Any> ) { //define the buoy locations
+
+        val buoy1Loc = point
+        // com.esri.arcgisruntime.geometry.Point(point.x, point.y, wgs84)
+
+        //create a marker symbol
+        val buoyMarker =
+            SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.RED, 10.0f)
+        buoyMarker.outline = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLACK,1.0f)
+        //create graphics
+        val buoyGraphic1 = Graphic(buoy1Loc, buoyMarker)
+
+        //add the graphics to the graphics overlay
+        graphicOverlay.graphics.add(buoyGraphic1)
+    }
+
+    private fun addText(graphicOverlay: GraphicsOverlay, point:com.esri.arcgisruntime.geometry.Point, attr: MutableMap<String, Any>) { //create a point geometry
+
+        val bassLocation = point
+        //com.esri.arcgisruntime.geometry.Point(point.x, point.y, wgs84)
+
+        //create text symbols
+        val bassRockSymbol = TextSymbol(
+            20.0f, attr.get("newPlace").toString(), Color.rgb(0, 0, 230),
+            TextSymbol.HorizontalAlignment.LEFT, TextSymbol.VerticalAlignment.BOTTOM
+        )
+
+        bassRockSymbol.fontWeight = TextSymbol.FontWeight.BOLD
+        bassRockSymbol.haloColor = titleColor
+
+        //define a graphic from the geometry and symbol
+        val bassRockGraphic = Graphic(bassLocation, bassRockSymbol)
+
+        //add the text to the graphics overlay
+        graphicOverlay.graphics.add(bassRockGraphic)
+
+
+
+        // get the MapView's LocationDisplay
+        mLocationDisplay = mMapView.getLocationDisplay()
+
+
+        // Listen to changes in the status of the location data source.
+        mLocationDisplay?.addDataSourceStatusChangedListener(LocationDisplay.DataSourceStatusChangedListener { dataSourceStatusChangedEvent ->
+            // If LocationDisplay started OK, then continue.
+            if (dataSourceStatusChangedEvent.isStarted) return@DataSourceStatusChangedListener
+            // No error is reported, then continue.
+            if (dataSourceStatusChangedEvent.error == null) return@DataSourceStatusChangedListener
+            // If an error is found, handle the failure to start.
+            // Check permissions to see if failure may be due to lack of permissions.
+            val permissionCheck1 =
+                ContextCompat.checkSelfPermission(this, reqPermissions[0]) ==
+                        PackageManager.PERMISSION_GRANTED
+            val permissionCheck2 =
+                ContextCompat.checkSelfPermission(this, reqPermissions[1]) ==
+                        PackageManager.PERMISSION_GRANTED
+            if (!(permissionCheck1 && permissionCheck2)) { // If permissions are not already granted, request permission from the user.
+                ActivityCompat.requestPermissions(
+                    this,
+                    reqPermissions,
+                    requestCode
+                )
+            } else { // Report other unknown failure types to the user - for example, location services may not
+                // be enabled on the device.
+                val message = String.format(
+                    "Error in DataSourceStatusChangedListener: %s", dataSourceStatusChangedEvent
+                        .source.locationDataSource.error.message
+                )
+                Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+                // Update UI to reflect that the location display did not actually start
+                mSpinner!!.setSelection(0, true)
+            }
+        })
+
+
+        // Populate the list for the Location display options for the spinner's Adapter
+        // Populate the list for the Location display options for the spinner's Adapter
+        val list: ArrayList<ItemData> = ArrayList<ItemData>()
+        list.add(ItemData("Stop", R.drawable.locationdisplaydisabled))
+        list.add(ItemData("On", R.drawable.locationdisplayon))
+        list.add(ItemData("Re-Center", R.drawable.locationdisplayrecenter))
+        list.add(ItemData("Navigation", R.drawable.locationdisplaynavigation))
+        list.add(ItemData("Compass", R.drawable.locationdisplayheading))
+
+        val adapter = SpinnerAdapter(this, R.layout.spinner_layout, R.id.txt, list)
+        mSpinner!!.adapter = adapter
+        mSpinner!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
+                when (position) {
+                    0 ->  // Stop Location Display
+                        if (mLocationDisplay!!.isStarted()) mLocationDisplay?.stop()
+                    1 ->  // Start Location Display
+                        if (!mLocationDisplay!!.isStarted()) mLocationDisplay?.startAsync()
+                    2 -> {
+                        // Re-Center MapView on Location
+                        // AutoPanMode - Default: In this mode, the MapView attempts to keep the location symbol on-screen by
+                        // re-centering the location symbol when the symbol moves outside a "wander extent". The location symbol
+                        // may move freely within the wander extent, but as soon as the symbol exits the wander extent, the MapView
+                        // re-centers the map on the symbol.
+                        mLocationDisplay?.setAutoPanMode(LocationDisplay.AutoPanMode.RECENTER)
+                        if (!mLocationDisplay!!.isStarted()) mLocationDisplay?.startAsync()
+                    }
+                    3 -> {
+                        // Start Navigation Mode
+                        // This mode is best suited for in-vehicle navigation.
+                        mLocationDisplay!!.setAutoPanMode(LocationDisplay.AutoPanMode.NAVIGATION)
+                        if (!mLocationDisplay!!.isStarted()) mLocationDisplay?.startAsync()
+                    }
+                    4 -> {
+                        // Start Compass Mode
+                        // This mode is better suited for waypoint navigation when the user is walking.
+                        mLocationDisplay!!.setAutoPanMode(LocationDisplay.AutoPanMode.COMPASS_NAVIGATION)
+                        if (!mLocationDisplay!!.isStarted()) mLocationDisplay?.startAsync()
+                    }
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
 
     }
 

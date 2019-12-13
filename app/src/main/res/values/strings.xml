@@ -2,4 +2,11 @@
     <string name="app_name">MUMWhere</string>
     <string name="location_permission_denied">LocationDisplayManager cannot run because location permission was denied</string>
 
+    <string name="service_layer_url">http://sampleserver6.arcgisonline.com/arcgis/rest/services/DamageAssessment/FeatureServer/0</string>
+    <string name="feature_added">Feature successfully added</string>
+
+    <string name="error_cannot_add_to_feature_table">Cannot add a feature to this feature table</string>
+    <string name="error_applying_edits">Exception applying edits on server: %s</string>
+
+
 </resources>
