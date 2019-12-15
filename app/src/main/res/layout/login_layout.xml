@@ -2,26 +2,57 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg_login"
     android:orientation="vertical">
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="49dp" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="49dp" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="49dp" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="49dp" />
+
     <EditText
+        android:id="@+id/et1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="UserName"
-        android:id="@+id/et1"/>
+        android:layout_margin="20dp"
+        android:background="@drawable/et_bg"
+        android:hint="@string/email_address"
+        android:inputType="textEmailAddress"
+        android:padding="16dp"
+        android:textColorHint="@color/login_form_details" />
+
     <EditText
+        android:id="@+id/et2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Password"
+        android:layout_margin="20dp"
+        android:background="@drawable/et_bg"
+
+        android:hint="@string/password"
         android:inputType="textPassword"
-        android:id="@+id/et2"/>
+        android:padding="16dp"
+        android:textColorHint="@color/login_form_details" />
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Login"
-        android:onClick="login"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Register"
-        android:onClick="register"/>
+        android:layout_marginTop="16dp"
+        android:background="@drawable/btn_bg"
+        android:onClick="login"
+        android:padding="20dp"
+        android:text="@string/login_now"
+        android:textAllCaps="false"
+        android:textColor="@color/login_form_details_medium" />
+
 </LinearLayout>
