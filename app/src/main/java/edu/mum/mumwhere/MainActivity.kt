@@ -222,9 +222,30 @@ class MainActivity : AppCompatActivity() {
             item.title.toString(),
             Toast.LENGTH_LONG).show()
 
+        if (item.title.toString() == "Login"){
+
         var i = Intent(this, LoginActivity::class.java)
         startActivity(i)
         return super.onOptionsItemSelected(item)
+        }
+
+
+
+        if (item.title.toString() == "About Us"){
+
+            var i = Intent(this, AboutActivity::class.java)
+            startActivity(i)
+            return super.onOptionsItemSelected(item)
+        }
+
+
+
+        else{   //for now, else will run route activity
+
+            var r = Intent(this, RouteActivity::class.java)
+            startActivity(r)
+            return super.onOptionsItemSelected(item)
+        }
     }
 
 
