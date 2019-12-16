@@ -23,4 +23,41 @@
         android:popupBackground="#00000000"
         android:overlapAnchor="false"/>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="22dp"
+        android:layout_marginEnd="22dp"
+        android:layout_marginBottom="22dp"
+        android:orientation="vertical">
+
+        <RadioGroup
+            android:id="@+id/editOptions"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#FFC107">
+
+            <RadioButton
+                android:id="@+id/rbAddFeature"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/add" />
+
+            <RadioButton
+                android:id="@+id/rbUpdateFeature"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/update" />
+
+            <RadioButton
+                android:id="@+id/rbDeleteFeature"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/delete" />
+
+        </RadioGroup>
+    </LinearLayout>
+
 </RelativeLayout>
