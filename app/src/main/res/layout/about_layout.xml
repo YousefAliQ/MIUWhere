@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@drawable/bg_login"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="74dp" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        android:layout_margin="20dp"
+        android:padding="16dp"
+        android:text="About Us"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="216dp"
+        android:layout_margin="20dp"
+        android:padding="16dp"
+        android:text="An application for MUM students to understand the university's whereabout. App made by Sibtain Raza with little assistance from fellow Adna and Yousef."
+        android:textSize="24sp" />
+
+</LinearLayout>

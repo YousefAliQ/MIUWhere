@@ -11,6 +11,9 @@ import kotlinx.android.synthetic.main.login_layout.*
 
 class LoginActivity : AppCompatActivity() {
 
+    lateinit var users :Array<User>
+
+
     lateinit var spf: SharedPreferences
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,20 +24,43 @@ class LoginActivity : AppCompatActivity() {
         val pwd = spf.getString("pass", "")
         et1.setText(name)
         et2.setText(pwd)
+        var user1 :User = User("yousef", "ali", "admin", "admin")
+        var user2 :User = User("yousef2", "ali", "sibtain", "raza")
+
+        users = arrayOf(user1, user2);
+
     }
 
     // Check whether the user exist already in the SharedPreferences.
     fun login(view: View) {
-        // To get the SharedPreferences using its name
-        // SharedPreferences spf = getSharedPreferences("login", Context.MODE_PRIVATE);
-        val name = spf.getString("name", "no value") // key, value pair. Here by default name is not found assign " no value"
-        val pwd = spf.getString("pass", "no value")
-        if ((name.equals(et1.text.toString(), ignoreCase = true) && et2.text.toString() == pwd)) {
-            Toast.makeText(applicationContext, "Success", Toast.LENGTH_LONG).show()
+
+        var username = et1.text.toString().trim()
+        var password = et2.text.toString().trim()
+
+
+
+        if (username != "" || password != "") {
+            var isValid = false
+            users.forEach {
+                if (username == it.username && password == it.password) {
+                    isValid = true
+                    Toast.makeText(this, "Welcome, $username", Toast.LENGTH_LONG).show()
+
+                    val i = Intent (this, MainActivity::class.java)
+                    i.putExtra("username", username)
+
+                    startActivity(i)
+
+
+                }
+            }
+            if (!isValid) {
+                Toast.makeText(this, "Email or password is invalid.", Toast.LENGTH_LONG).show()
+            }
+        } else {
+            Toast.makeText(this, "Enter your email and password.", Toast.LENGTH_LONG).show()
         }
-        else {
-            Toast.makeText(applicationContext, "Fail to Login", Toast.LENGTH_LONG).show()
-        }
+
     }
 
 }
