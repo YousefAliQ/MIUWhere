@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_login" >
 
 
     <TextView
@@ -10,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="20sp"
         android:gravity="center"
-        android:text="Add new Building"
+        android:text="@string/addBuildingTitle"
         android:textSize="25sp" />
 
     <LinearLayout
@@ -26,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Building Name" />
+            android:text="@string/building_name" />
 
         <EditText
             android:id="@+id/username"

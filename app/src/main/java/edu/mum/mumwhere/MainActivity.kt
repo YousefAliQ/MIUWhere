@@ -1,6 +1,7 @@
 package edu.mum.mumwhere
 
 
+
 import android.Manifest
 import android.app.Activity
 import android.content.Context
@@ -8,6 +9,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Color
+import android.opengl.Visibility
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -41,11 +43,14 @@ import java.util.concurrent.ExecutionException
 
 class MainActivity : AppCompatActivity() {
 
+
+    private lateinit var mNavigationDrawerItemTitles: Array<String>
     private val wgs84 = SpatialReference.create(4236)
     private lateinit var mMapView: MapView
     private var mLocationDisplay: LocationDisplay? = null
     var graphicsOverlay: GraphicsOverlay? = null
     private var mSpinner: Spinner? = null
+    private var mBasemap: Spinner? = null
     lateinit var mapPoint: Point
 
     private val requestCode = 2
@@ -58,12 +63,33 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        initMap()
+        editOptions.visibility = View.INVISIBLE
 
+
+        val geti = intent
+
+        val checki = geti.getStringExtra("isLogin")
+
+        val spfr = getSharedPreferences("login",Context.MODE_PRIVATE)
+        val name= spfr.getString("username","")
+        val check = spfr.getString("isLogin","")
+
+        if (checki=="y"){
+            editOptions.visibility = View.VISIBLE
+        }
+
+        initMap()
+        registerChangeBasemap()
         registerCurrentLocation()
         updateOnTouchListener()
-
         displayPoints()
+
+        supportActionBar?.apply {
+         //   setDisplayHomeAsUpEnabled(true)
+            //  setHomeButtonEnabled(true)
+            // set opening basemap title to Topographic
+            title = "MIU Where?"
+        }
 
         // TODO : mapping function to fix the shifting issue
         //-91.96765780448914,41.015310287475586
@@ -72,8 +98,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initMap() {
+
+        mNavigationDrawerItemTitles =
+            Basemap.Type.values().map { it.name.replace("_", " ").toLowerCase().capitalize() }.toTypedArray()
+
         // Get the Spinner from layout
         mSpinner = findViewById<View>(R.id.spinner) as Spinner
+
+
+        // Get the basemap from layout
+        mBasemap = findViewById<View>(R.id.basemap) as Spinner
+
 
         // inflate MapView from layout
         mMapView = findViewById(R.id.mapView) as MapView
@@ -89,10 +124,45 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * Select the Basemap item based on position in the navigation drawer
+     *
+     * @param position order int in navigation drawer
+     */
+    private fun selectBasemap(position: Int) {
+
+        // get basemap title by position
+        val baseMapTitle = mNavigationDrawerItemTitles[position]
+        //supportActionBar?.title = baseMapTitle
+
+        // select basemap by title
+        mapView.map.basemap = when (Basemap.Type.valueOf(baseMapTitle.replace(" ", "_").toUpperCase())) {
+            Basemap.Type.DARK_GRAY_CANVAS_VECTOR -> Basemap.createDarkGrayCanvasVector()
+            Basemap.Type.IMAGERY -> Basemap.createImagery()
+            Basemap.Type.IMAGERY_WITH_LABELS -> Basemap.createImageryWithLabels()
+            Basemap.Type.IMAGERY_WITH_LABELS_VECTOR -> Basemap.createImageryWithLabelsVector()
+            Basemap.Type.LIGHT_GRAY_CANVAS -> Basemap.createLightGrayCanvas()
+            Basemap.Type.LIGHT_GRAY_CANVAS_VECTOR -> Basemap.createDarkGrayCanvasVector()
+            Basemap.Type.NATIONAL_GEOGRAPHIC -> Basemap.createNationalGeographic()
+            Basemap.Type.NAVIGATION_VECTOR -> Basemap.createNavigationVector()
+            Basemap.Type.OCEANS -> Basemap.createOceans()
+            Basemap.Type.OPEN_STREET_MAP -> Basemap.createOceans()
+            Basemap.Type.STREETS -> Basemap.createStreets()
+            Basemap.Type.STREETS_NIGHT_VECTOR -> Basemap.createStreetsNightVector()
+            Basemap.Type.STREETS_WITH_RELIEF_VECTOR -> Basemap.createStreetsWithReliefVector()
+            Basemap.Type.STREETS_VECTOR -> Basemap.createStreetsVector()
+            Basemap.Type.TOPOGRAPHIC -> Basemap.createTopographic()
+            Basemap.Type.TERRAIN_WITH_LABELS -> Basemap.createTerrainWithLabels()
+            Basemap.Type.TERRAIN_WITH_LABELS_VECTOR -> Basemap.createTerrainWithLabelsVector()
+            Basemap.Type.TOPOGRAPHIC_VECTOR -> Basemap.createTopographicVector()
+        }
+    }
+
 
     private fun updateOnTouchListener() {
         mapView.setOnTouchListener(object : DefaultMapViewOnTouchListener(this, mapView) {
             override fun onSingleTapConfirmed(event: MotionEvent): Boolean { // create a point from where the user clicked
+
                 val point =
                     android.graphics.Point(event.x.toInt(), event.y.toInt())
                 // create a map point from a point
@@ -188,14 +258,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun displayPoints() {
 
+        // TODO : read all points from building table and add it to the graphicsOverlay.
+
         // add graphics overlay to MapView.
         val graphicsOverlay: GraphicsOverlay? = addGraphicsOverlay(mMapView)
-        //add some buoy positions to the graphics overlay
-        //addBuoyPoints(graphicsOverlay!!)
-
-        //add text symbols and points to graphics overlay
-        //addText(graphicsOverlay)
-
 
         val mapPoint: com.esri.arcgisruntime.geometry.Point = Point(-91.96036219596863, 41.0209321975708,wgs84)
 
@@ -208,6 +274,48 @@ class MainActivity : AppCompatActivity() {
 
         addText(graphicsOverlay!!, mapPoint, attributes)
 
+
+    }
+
+    private fun registerChangeBasemap() {
+
+
+        // Populate the list for the Location display options for the spinner's Adapter
+        val list: ArrayList<ItemData> = ArrayList<ItemData>()
+        list.add(ItemData(resources.getString(R.string.DarkGrayCanvasVector),R.drawable.basemap))
+        list.add(ItemData(resources.getString(R.string.Imagery),R.drawable.basemap))
+        list.add(ItemData(resources.getString(R.string.ImageryWithLabels),R.drawable.basemap))
+        list.add(ItemData(resources.getString(R.string.LightGrayCanvas),R.drawable.basemap))
+        list.add(ItemData(resources.getString(R.string.LightGrayCanvasVector),R.drawable.basemap))
+        list.add(ItemData(resources.getString(R.string.NationalGeographic),R.drawable.basemap))
+        list.add(ItemData(resources.getString(R.string.NavigationVector),R.drawable.basemap))
+        list.add(ItemData(resources.getString(R.string.Oceans),R.drawable.basemap))
+        list.add(ItemData(resources.getString(R.string.OpenStreetMap),R.drawable.basemap))
+        list.add(ItemData(resources.getString(R.string.Streets),R.drawable.basemap))
+        list.add(ItemData(resources.getString(R.string.StreetsNightVector),R.drawable.basemap))
+        list.add(ItemData(resources.getString(R.string.StreetsVector),R.drawable.basemap))
+        list.add(ItemData(resources.getString(R.string.StreetsWithReliefVector),R.drawable.basemap))
+        list.add(ItemData(resources.getString(R.string.TerrainWithLabels),R.drawable.basemap))
+        list.add(ItemData(resources.getString(R.string.TerrainWithLabelsVector),R.drawable.basemap))
+        list.add(ItemData(resources.getString(R.string.Topographic),R.drawable.basemap))
+        list.add(ItemData(resources.getString(R.string.TopographicVector),R.drawable.basemap))
+
+        val adapter = SpinnerAdapter(this, R.layout.basemap_layout, R.id.txt, list)
+        mBasemap!!.adapter = adapter
+        mBasemap!!.onItemSelectedListener = object : OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
+                selectBasemap(position)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+
+        mBasemap!!.setSelection(1, true)
 
     }
 
@@ -253,11 +361,11 @@ class MainActivity : AppCompatActivity() {
 
         // Populate the list for the Location display options for the spinner's Adapter
         val list: ArrayList<ItemData> = ArrayList<ItemData>()
-        list.add(ItemData("Stop", R.drawable.locationdisplaydisabled))
-        list.add(ItemData("On", R.drawable.locationdisplayon))
-        list.add(ItemData("Re-Center", R.drawable.locationdisplayrecenter))
-        list.add(ItemData("Navigation", R.drawable.locationdisplaynavigation))
-        list.add(ItemData("Compass", R.drawable.locationdisplayheading))
+        list.add(ItemData(resources.getString(R.string.stop), R.drawable.locationdisplaydisabled))
+        list.add(ItemData(resources.getString(R.string.on), R.drawable.locationdisplayon))
+        list.add(ItemData(resources.getString(R.string.recenter), R.drawable.locationdisplayrecenter))
+        list.add(ItemData(resources.getString(R.string.navigation), R.drawable.locationdisplaynavigation))
+        list.add(ItemData(resources.getString(R.string.compass), R.drawable.locationdisplayheading))
 
         val adapter = SpinnerAdapter(this, R.layout.spinner_layout, R.id.txt, list)
         mSpinner!!.adapter = adapter
@@ -388,7 +496,12 @@ class MainActivity : AppCompatActivity() {
         else{   //for now, else will run route activity
 
             var r = Intent(this, RouteActivity::class.java)
-            startActivity(r)
+            r.putExtra("sourceY", "41.00612")
+            r.putExtra("sourceX", "-91.9849627")
+
+            r.putExtra("destY", "41.005917")
+            r.putExtra("destX",  "-91.9767849")
+            startActivityForResult(r, 1)
             return super.onOptionsItemSelected(item)
         }
     }

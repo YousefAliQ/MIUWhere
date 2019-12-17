@@ -28,13 +28,22 @@ class RouteActivity : AppCompatActivity() {
 
         wview.addJavascriptInterface(this,"myinterface");
 
-        wview.loadUrl("file:///android_asset/route.html")
+        LatCode = intent.getStringExtra("sourceY")
+        LongCode = intent.getStringExtra("sourceX")
 
+        DLatCode= intent.getStringExtra("destY")
+        DLongCode = intent.getStringExtra("destX")
+
+
+        /*
         LatCode = "41.00612"
         LongCode = "-91.9849627"
 
         DLatCode= "41.005917"
         DLongCode = "-91.9767849"
+        */
+
+        wview.loadUrl("file:///android_asset/route.html")
 
 
 
@@ -65,11 +74,6 @@ class RouteActivity : AppCompatActivity() {
     fun getDLong(): Double {
         return DLongCode.toDouble()
     }
-
-
-
-
-
 
 
     }

@@ -15,13 +15,18 @@ class LoginActivity : AppCompatActivity() {
 
 
     lateinit var spf: SharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_layout)
         spf = getSharedPreferences("login", Context.MODE_PRIVATE)
         // key, value pair. Here by default name is not found assign " no value"
+
+
+
         val name = spf.getString("name", "")
         val pwd = spf.getString("pass", "")
+        val isLogged = spf.getString("isL","")
         et1.setText(name)
         et2.setText(pwd)
         var user1 :User = User("yousef", "ali", "admin", "admin")
@@ -47,7 +52,13 @@ class LoginActivity : AppCompatActivity() {
                     Toast.makeText(this, "Welcome, $username", Toast.LENGTH_LONG).show()
 
                     val i = Intent (this, MainActivity::class.java)
+
+                    var spe=spf.edit()
+
+                    spe.putString("isLogin","y")
+                    spe.apply()
                     i.putExtra("username", username)
+                    i.putExtra("isLogin","y")
 
                     startActivity(i)
 
