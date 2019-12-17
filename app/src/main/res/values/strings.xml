@@ -27,8 +27,20 @@
     <string name="add">Add</string>
     <string name="update">Update</string>
     <string name="delete">Delete</string>
-    <string name="title_activity_map_and_details">MapAndDetailsActivity</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="building_name">Building Name</string>
+
+    <string name="stop">Stop</string>
+    <string name="on">On</string>
+    <string name="recenter">Re-Center</string>
+    <string name="navigation">Navigation</string>
+    <string name="compass">Compass</string>
+
+
+
+
+
+    <string name="addBuildingTitle"> Add new Building </string>
 </resources>

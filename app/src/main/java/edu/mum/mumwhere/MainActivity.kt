@@ -253,11 +253,11 @@ class MainActivity : AppCompatActivity() {
 
         // Populate the list for the Location display options for the spinner's Adapter
         val list: ArrayList<ItemData> = ArrayList<ItemData>()
-        list.add(ItemData("Stop", R.drawable.locationdisplaydisabled))
-        list.add(ItemData("On", R.drawable.locationdisplayon))
-        list.add(ItemData("Re-Center", R.drawable.locationdisplayrecenter))
-        list.add(ItemData("Navigation", R.drawable.locationdisplaynavigation))
-        list.add(ItemData("Compass", R.drawable.locationdisplayheading))
+        list.add(ItemData(resources.getString(R.string.stop), R.drawable.locationdisplaydisabled))
+        list.add(ItemData(resources.getString(R.string.on), R.drawable.locationdisplayon))
+        list.add(ItemData(resources.getString(R.string.recenter), R.drawable.locationdisplayrecenter))
+        list.add(ItemData(resources.getString(R.string.navigation), R.drawable.locationdisplaynavigation))
+        list.add(ItemData(resources.getString(R.string.compass), R.drawable.locationdisplayheading))
 
         val adapter = SpinnerAdapter(this, R.layout.spinner_layout, R.id.txt, list)
         mSpinner!!.adapter = adapter
@@ -391,7 +391,12 @@ class MainActivity : AppCompatActivity() {
         else{   //for now, else will run route activity
 
             var r = Intent(this, RouteActivity::class.java)
-            startActivity(r)
+            r.putExtra("sourceY", "41.00612")
+            r.putExtra("sourceX", "-91.9849627")
+
+            r.putExtra("destY", "41.005917")
+            r.putExtra("destX",  "-91.9767849")
+            startActivityForResult(r, 1)
             return super.onOptionsItemSelected(item)
         }
     }
