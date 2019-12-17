@@ -370,6 +370,14 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+        if (item.title.toString() == "Scan QR"){
+
+            var i = Intent(this, ScanMainActivity::class.java)
+            startActivity(i)
+            return super.onOptionsItemSelected(item)
+        }
+
+
 
         if (item.title.toString() == "About Us"){
 

@@ -16,5 +16,9 @@
         android:id="@+id/m3"
         android:title="About Us"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/m4"
+        android:title="Scan QR"
+        app:showAsAction="never"/>
 
 </menu>

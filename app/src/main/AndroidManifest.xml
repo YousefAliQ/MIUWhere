@@ -21,6 +21,10 @@
         <activity android:name=".LoginActivity" />
         <activity android:name=".RouteActivity" />
         <activity android:name=".AboutActivity" />
+        <activity android:name=".GenerateQrAct" />
+        <activity android:name=".ScanQrAct" />
+        <activity android:name=".ScanMainActivity" />
+
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden">

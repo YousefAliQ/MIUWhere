@@ -5,9 +5,16 @@ import android.webkit.JavascriptInterface
 import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.geometry.CoordinateFormatter
 import kotlinx.android.synthetic.main.route_layout.*
 
 class RouteActivity : AppCompatActivity() {
+
+    lateinit var LatCode:String
+    lateinit var LongCode:String
+
+    lateinit var DLatCode:String
+    lateinit var DLongCode:String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,13 +30,44 @@ class RouteActivity : AppCompatActivity() {
 
         wview.loadUrl("file:///android_asset/route.html")
 
+        LatCode = "41.00612"
+        LongCode = "-91.9849627"
+
+        DLatCode= "41.005917"
+        DLongCode = "-91.9767849"
+
+
+
     }
 
 
     @JavascriptInterface
-    fun displayMsg(name: String, pass: String) {
-        Toast.makeText(applicationContext, "$name logged in", Toast.LENGTH_LONG).show()
+    fun getLat(): Double {
+        return LatCode.toDouble()
     }
+
+
+    @JavascriptInterface
+    fun getLong(): Double {
+        return LongCode.toDouble()
+    }
+
+
+
+    @JavascriptInterface
+    fun getDLat(): Double {
+        return DLatCode.toDouble()
+    }
+
+
+
+    @JavascriptInterface
+    fun getDLong(): Double {
+        return DLongCode.toDouble()
+    }
+
+
+
 
 
 
