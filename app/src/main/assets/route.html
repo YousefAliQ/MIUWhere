@@ -28,13 +28,22 @@ function mapLocation() {
         };
         map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
         directionsDisplay.setMap(map);
-        google.maps.event.addDomListener(document.getElementById('routebtn'), 'click', calcRoute);
+        //google.maps.event.addDomListener(document.getElementById('routebtn'), 'click', );
+        calcRoute()
     }
 
     function calcRoute() {
-        var start = new google.maps.LatLng(41.016998,-91.9647933);
+
+            var latt = myinterface.getLat()
+        var longg = myinterface.getLong()
+
+         var dlatt = myinterface.getDLat()
+        var dlongg = myinterface.getDLong()
+
+
+        var start = new google.maps.LatLng(latt,longg);
         //var end = new google.maps.LatLng(38.334818, -181.884886);
-        var end = new google.maps.LatLng(41.022375,-91.9680819);
+        var end = new google.maps.LatLng(dlatt,dlongg);
         /*
 var startMarker = new google.maps.Marker({
             position: start,
