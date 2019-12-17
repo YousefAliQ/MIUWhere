@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
@@ -28,6 +29,7 @@ import com.esri.arcgisruntime.mapping.view.LocationDisplay.DataSourceStatusChang
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol
 import com.esri.arcgisruntime.symbology.TextSymbol
+import edu.mum.mumwhere.Models.Login
 import edu.mum.mumwhere.spinner.ItemData
 import edu.mum.mumwhere.spinner.SpinnerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
@@ -35,7 +37,11 @@ import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
-
+    //Code By Adnan Shehzad for Database Testing
+    internal var dbHelper = DatabaseHelper(this)
+    //Creating an Object of Login to insert data Hardcoated
+    var login:Login= Login("admin","admin")
+    //Ended here for database
     private val wgs84 = SpatialReference.create(4236)
     private lateinit var mMapView: MapView
     private var mLocationDisplay: LocationDisplay? = null
@@ -47,12 +53,25 @@ class MainActivity : AppCompatActivity() {
         Manifest.permission.ACCESS_FINE_LOCATION,
         Manifest.permission.ACCESS_COARSE_LOCATION
     )
+    //Code Declared by Adnan for Database Creation
+    //private var databaseHelper: DatabaseHelper? =
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        //Variable declared by Adnan to Instantiate the Database and create the tables
+        //databaseHelper = DatabaseHelper(this)
+    /*
+    Code By adnan Shehzad commenting the code
+        //dbHelper.insertDataintoLogin(login)
+        //dbHelper.insertDataintoLogin()
+        //dbHelper.insertdataintoBuilding("www.google.com","23.90","232.22")
+        //dbHelper.insertdataintoOffice("Clerk",2)
+        //dbHelper.insertdataintoClassroom("WAP","VERILHALL",3)
+        //dbHelper.insertdataintoPOI("Entertainment",3)
+        //Log.d("Insert data manually","message")
         // Get the Spinner from layout
+        */
         mSpinner = findViewById<View>(R.id.spinner) as Spinner
 
         // inflate MapView from layout
