@@ -2,6 +2,8 @@ package edu.mum.mumwhere
 
 
 import android.Manifest
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
@@ -19,6 +21,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.SpatialReference
 import com.esri.arcgisruntime.mapping.ArcGISMap
@@ -42,6 +46,7 @@ class MainActivity : AppCompatActivity() {
     private var mLocationDisplay: LocationDisplay? = null
     var graphicsOverlay: GraphicsOverlay? = null
     private var mSpinner: Spinner? = null
+    lateinit var mapPoint: Point
 
     private val requestCode = 2
     var reqPermissions = arrayOf(
@@ -82,7 +87,8 @@ class MainActivity : AppCompatActivity() {
         // set the map to be displayed in the layout's MapView
         mMapView.map = map
 
-    } 
+    }
+
 
     private fun updateOnTouchListener() {
         mapView.setOnTouchListener(object : DefaultMapViewOnTouchListener(this, mapView) {
@@ -90,7 +96,7 @@ class MainActivity : AppCompatActivity() {
                 val point =
                     android.graphics.Point(event.x.toInt(), event.y.toInt())
                 // create a map point from a point
-                val mapPoint =
+                 mapPoint =
                     mMapView.screenToLocation(point)
 
                 // add/delete/update a new feature if its on the edit mode.
@@ -306,16 +312,38 @@ class MainActivity : AppCompatActivity() {
     private fun addFeature(
         mapPoint: com.esri.arcgisruntime.geometry.Point
     ) { // create default attributes for the feature
-        val attributes: MutableMap<String, Any> =
-            HashMap()
-        attributes["newPlace"] = "New place!"
-        attributes["primcause"] = "Earthquake"
 
-        addBuoyPoints(graphicsOverlay!!, mapPoint, attributes)
+        var i = Intent(this, EditorActivity::class.java)
+        startActivityForResult(i, 1)
 
-        addText(graphicsOverlay!!, mapPoint, attributes)
+
 
     }
+
+
+
+
+      override fun onActivityResult( requestCode: Int,  resultCode:Int,  data:Intent?) {
+          super.onActivityResult(requestCode,resultCode,data)
+
+          if (1 == requestCode) {
+            if(resultCode == Activity.RESULT_OK){
+
+            Toast.makeText(this.applicationContext, data?.data.toString() , Toast.LENGTH_LONG)
+
+
+                val attributes: MutableMap<String, Any> =
+                    HashMap()
+                attributes["newPlace"] =   data?.getStringExtra("username").toString()
+                attributes["primcause"] = "Earthquake"
+
+                addBuoyPoints(graphicsOverlay!!, mapPoint, attributes)
+
+                addText(graphicsOverlay!!, mapPoint, attributes)
+
+       }
+    }
+}
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
