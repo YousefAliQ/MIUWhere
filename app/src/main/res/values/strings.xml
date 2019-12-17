@@ -8,5 +8,56 @@
     <string name="error_cannot_add_to_feature_table">Cannot add a feature to this feature table</string>
     <string name="error_applying_edits">Exception applying edits on server: %s</string>
 
+    <string name="scan_app_name">Qr App</string>
+    <string name="scan_again">scan again</string>
+    <string name="generate_qr">GENERATE QR</string>
+    <string name="qr_value">qr value</string>
+    <string name="scan_qr">SCAN QR</string>
 
+
+    <string name="email_address">Email address</string>
+    <string name="password">Password</string>
+    <string name="login_now">Login Now</string>
+    <string name="don_t_remember_password">Don\'t Remember password?</string>
+    <string name="dont_have_an_account">Don\'t have an account?</string>
+    <string name="sign_in_with_facebook">Sign in with Facebook</string>
+    <string name="or">or</string>
+
+
+    <string name="add">Add</string>
+    <string name="update">Update</string>
+    <string name="delete">Delete</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="building_name">Building Name</string>
+
+    <string name="stop">Stop</string>
+    <string name="on">On</string>
+    <string name="recenter">Re-Center</string>
+    <string name="navigation">Navigation</string>
+    <string name="compass">Compass</string>
+
+
+
+    <string name = "DarkGrayCanvasVector">DarkGrayCanvasVector</string>
+    <string name = "Imagery">Imagery</string>
+    <string name = "ImageryWithLabels">ImageryWithLabels</string>
+    <string name = "LightGrayCanvas">LightGrayCanvas</string>
+    <string name = "LightGrayCanvasVector">LightGrayCanvasVector</string>
+    <string name = "NationalGeographic">NationalGeographic</string>
+    <string name = "NavigationVector">NavigationVector</string>
+    <string name = "Oceans">Oceans</string>
+    <string name = "OpenStreetMap">OpenStreetMap</string>
+    <string name = "Streets">Streets</string>
+    <string name = "StreetsNightVector">StreetsNightVector</string>
+    <string name = "StreetsVector">StreetsVector</string>
+    <string name = "StreetsWithReliefVector">StreetsWithReliefVector</string>
+    <string name = "TerrainWithLabels">TerrainWithLabels</string>
+    <string name = "TerrainWithLabelsVector">TerrainWithLabelsVector</string>
+    <string name = "Topographic">Topographic</string>
+    <string name = "TopographicVector">TopographicVector</string>
+
+
+    <string name="addBuildingTitle"> Add new Building </string>
 </resources>

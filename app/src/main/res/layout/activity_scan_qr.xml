@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_login"
+    android:orientation="vertical">
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="49dp" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="49dp" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="49dp" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="49dp" />
+
+    <TextView
+        android:id="@+id/value"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:padding="16dp"
+         />
+
+    <Button
+        android:id="@+id/btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:background="@drawable/et_bg"
+        android:text="@string/scan_again"
+        android:padding="16dp"
+        android:textColor="@color/login_form_details_medium"
+         />
+
+</LinearLayout>

@@ -8,5 +8,17 @@
         android:id="@+id/m1"
         android:title="Login"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/m2"
+        android:title="Route"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/m3"
+        android:title="About Us"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/m4"
+        android:title="Scan QR"
+        app:showAsAction="never"/>
 
 </menu>

@@ -16,7 +16,6 @@
 
 package edu.mum.mumwhere.spinner;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +24,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
@@ -35,7 +35,7 @@ public class SpinnerAdapter extends ArrayAdapter<ItemData> {
     private final ArrayList<ItemData> list;
     private final LayoutInflater inflater;
 
-    public SpinnerAdapter(Activity context, int groupid, int id, ArrayList<ItemData>
+    public SpinnerAdapter(AppCompatActivity context, int groupid, int id, ArrayList<ItemData>
             list) {
         super(context, id, list);
         this.list = list;
