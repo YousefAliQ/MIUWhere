@@ -2,6 +2,8 @@ package edu.mum.mumwhere
 
 
 import android.Manifest
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
@@ -19,6 +21,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.SpatialReference
 import com.esri.arcgisruntime.mapping.ArcGISMap
@@ -32,6 +36,7 @@ import edu.mum.mumwhere.spinner.ItemData
 import edu.mum.mumwhere.spinner.SpinnerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
+import java.util.concurrent.ExecutionException
 
 
 class MainActivity : AppCompatActivity() {
@@ -41,6 +46,7 @@ class MainActivity : AppCompatActivity() {
     private var mLocationDisplay: LocationDisplay? = null
     var graphicsOverlay: GraphicsOverlay? = null
     private var mSpinner: Spinner? = null
+    lateinit var mapPoint: Point
 
     private val requestCode = 2
     var reqPermissions = arrayOf(
@@ -52,6 +58,20 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        initMap()
+
+        registerCurrentLocation()
+        updateOnTouchListener()
+
+        displayPoints()
+
+        // TODO : mapping function to fix the shifting issue
+        //-91.96765780448914,41.015310287475586
+        //-91.96036219596863,41.0209321975708
+
+    }
+
+    private fun initMap() {
         // Get the Spinner from layout
         mSpinner = findViewById<View>(R.id.spinner) as Spinner
 
@@ -64,23 +84,109 @@ class MainActivity : AppCompatActivity() {
         graphicsOverlay = addGraphicsOverlay(mMapView)
 
 
-        // add a listener to the MapView to detect when a user has performed a single tap to add a new feature to
-        // the service feature table
+        // set the map to be displayed in the layout's MapView
+        mMapView.map = map
+
+    }
+
+
+    private fun updateOnTouchListener() {
         mapView.setOnTouchListener(object : DefaultMapViewOnTouchListener(this, mapView) {
             override fun onSingleTapConfirmed(event: MotionEvent): Boolean { // create a point from where the user clicked
                 val point =
                     android.graphics.Point(event.x.toInt(), event.y.toInt())
                 // create a map point from a point
-                val mapPoint =
+                 mapPoint =
                     mMapView.screenToLocation(point)
-                // add a new feature to the service feature table
-                addFeature(mapPoint)
+
+                // add/delete/update a new feature if its on the edit mode.
+                if (rbAddFeature.isChecked){
+                    addFeature(mapPoint)
+                }else if (rbUpdateFeature.isChecked){
+                    // TODO : implement update feature
+
+                    // identify graphics on the graphics overlay
+                    // identify graphics on the graphics overlay
+                    val identifyGraphic =
+                        mMapView.identifyGraphicsOverlayAsync(
+                            graphicsOverlay,
+                            point,
+                            10.0,
+                            false,
+                            2
+                        )
+
+                    identifyGraphic.addDoneListener {
+                        try {
+                            val grOverlayResult =
+                                identifyGraphic.get()
+                            // get the list of graphics returned by identify graphic overlay
+                            val graphic =
+                                grOverlayResult.graphics
+                            // get size of list in results
+                            val identifyResultSize = graphic.size
+                            if (!graphic.isEmpty()) { // show a toast message if graphic was returned
+                                Toast.makeText(
+                                    applicationContext,
+                                    "Tapped on $identifyResultSize Graphic",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        } catch (ie: InterruptedException) {
+                            ie.printStackTrace()
+                        } catch (ie: ExecutionException) {
+                            ie.printStackTrace()
+                        }
+                    }
+                }else if (rbDeleteFeature.isChecked){
+                    // TODO : implement delete feature
+
+                    // identify graphics on the graphics overlay
+                    // identify graphics on the graphics overlay
+                    val identifyGraphic =
+                        mMapView.identifyGraphicsOverlayAsync(
+                            graphicsOverlay,
+                            point,
+                            25.0,
+                            false,
+                            2
+                        )
+
+
+                    identifyGraphic.addDoneListener {
+                        try {
+                            val grOverlayResult =
+                                identifyGraphic.get()
+                            // get the list of graphics returned by identify graphic overlay
+                            val graphics =
+                                grOverlayResult.graphics
+                            // get size of list in results
+                            val identifyResultSize = graphics.size
+                            if (!graphics.isEmpty()) { // show a toast message if graphic was returned
+
+                                graphicsOverlay!!.graphics.removeAll(graphics)
+
+                                Toast.makeText(
+                                    applicationContext,
+                                    "Deleted successfully!",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        } catch (ie: InterruptedException) {
+                            ie.printStackTrace()
+                        } catch (ie: ExecutionException) {
+                            ie.printStackTrace()
+                        }
+                    }
+
+                }
+
                 return super.onSingleTapConfirmed(event)
             }
         })
+    }
 
-        // set the map to be displayed in the layout's MapView
-        mMapView.map = map
+    private fun displayPoints() {
 
         // add graphics overlay to MapView.
         val graphicsOverlay: GraphicsOverlay? = addGraphicsOverlay(mMapView)
@@ -90,10 +196,22 @@ class MainActivity : AppCompatActivity() {
         //add text symbols and points to graphics overlay
         //addText(graphicsOverlay)
 
-        // TODO : mapping function to fix the shifting issue
-        //-91.96765780448914,41.015310287475586
-        //-91.96036219596863,41.0209321975708
 
+        val mapPoint: com.esri.arcgisruntime.geometry.Point = Point(-91.96036219596863, 41.0209321975708,wgs84)
+
+        val attributes: MutableMap<String, Any> =
+            HashMap()
+        attributes["newPlace"] = "Argiro"
+        attributes["primcause"] = "Earthquake"
+
+        addBuoyPoints(graphicsOverlay!!, mapPoint, attributes)
+
+        addText(graphicsOverlay!!, mapPoint, attributes)
+
+
+    }
+
+    private fun registerCurrentLocation() {
 
         // get the MapView's LocationDisplay
         mLocationDisplay = mMapView.getLocationDisplay()
@@ -194,16 +312,38 @@ class MainActivity : AppCompatActivity() {
     private fun addFeature(
         mapPoint: com.esri.arcgisruntime.geometry.Point
     ) { // create default attributes for the feature
-        val attributes: MutableMap<String, Any> =
-            HashMap()
-        attributes["newPlace"] = "New place!"
-        attributes["primcause"] = "Earthquake"
 
-        addBuoyPoints(graphicsOverlay!!, mapPoint, attributes)
+        var i = Intent(this, EditorActivity::class.java)
+        startActivityForResult(i, 1)
 
-        addText(graphicsOverlay!!, mapPoint, attributes)
+
 
     }
+
+
+
+
+      override fun onActivityResult( requestCode: Int,  resultCode:Int,  data:Intent?) {
+          super.onActivityResult(requestCode,resultCode,data)
+
+          if (1 == requestCode) {
+            if(resultCode == Activity.RESULT_OK){
+
+            Toast.makeText(this.applicationContext, data?.data.toString() , Toast.LENGTH_LONG)
+
+
+                val attributes: MutableMap<String, Any> =
+                    HashMap()
+                attributes["newPlace"] =   data?.getStringExtra("username").toString()
+                attributes["primcause"] = "Earthquake"
+
+                addBuoyPoints(graphicsOverlay!!, mapPoint, attributes)
+
+                addText(graphicsOverlay!!, mapPoint, attributes)
+
+       }
+    }
+}
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -312,43 +452,6 @@ class MainActivity : AppCompatActivity() {
         mapView.graphicsOverlays.add(graphicsOverlay)
         return graphicsOverlay
     }
-
-    /*private fun addBuoyPoints(graphicOverlay: GraphicsOverlay) { //define the buoy locations
-
-        val buoy1Loc =
-            Point(-91.95978283882141,41.023335456848145, wgs84)
-
-        //create a marker symbol
-        val buoyMarker =
-            SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.RED, 10.0f)
-        buoyMarker.outline = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID,Color.BLACK,1.0f)
-        //create graphics
-        val buoyGraphic1 = Graphic(buoy1Loc, buoyMarker)
-
-        //add the graphics to the graphics overlay
-        graphicOverlay.graphics.add(buoyGraphic1)
-    }
-
-    private fun addText(graphicOverlay: GraphicsOverlay) { //create a point geometry
-
-        val bassLocation =
-            Point(-91.95978283882141,41.023335456848145, wgs84)
-
-        //create text symbols
-        val bassRockSymbol = TextSymbol(
-            20.0f, "Argiro", Color.rgb(0, 0, 230),
-            TextSymbol.HorizontalAlignment.LEFT, TextSymbol.VerticalAlignment.BOTTOM
-        )
-
-        bassRockSymbol.fontWeight = TextSymbol.FontWeight.BOLD
-        bassRockSymbol.haloColor = titleColor
-
-        //define a graphic from the geometry and symbol
-        val bassRockGraphic = Graphic(bassLocation, bassRockSymbol)
-
-        //add the text to the graphics overlay
-        graphicOverlay.graphics.add(bassRockGraphic)
-    }*/
 
     private fun addBuoyPoints(graphicOverlay: GraphicsOverlay, point:com.esri.arcgisruntime.geometry.Point, attr: MutableMap<String, Any> ) { //define the buoy locations
 
