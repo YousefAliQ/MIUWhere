@@ -315,11 +315,7 @@ class MainActivity : AppCompatActivity() {
 
         var i = Intent(this, EditorActivity::class.java)
         startActivityForResult(i, 1)
-
-
-
     }
-
 
 
 
@@ -362,7 +358,7 @@ class MainActivity : AppCompatActivity() {
             item.title.toString(),
             Toast.LENGTH_LONG).show()
 
-        if (item.title.toString() == "Login"){
+        if (item.title.toString() == resources.getString(R.string.login_menu)){
 
         var i = Intent(this, LoginActivity::class.java)
         startActivity(i)
@@ -370,7 +366,8 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        if (item.title.toString() == "Scan QR"){
+
+        if (item.title.toString() == resources.getString(R.string.scan_menu)){
 
             var i = Intent(this, ScanMainActivity::class.java)
             startActivity(i)
@@ -379,7 +376,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        if (item.title.toString() == "About Us"){
+        if (item.title.toString() == resources.getString(R.string.about_menu)){
 
             var i = Intent(this, AboutActivity::class.java)
             startActivity(i)
