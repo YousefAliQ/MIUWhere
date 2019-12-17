@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_login"
+    android:orientation="vertical">
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="49dp" />
+
+
+    <EditText
+        android:id="@+id/value"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:background="@drawable/et_bg"
+        android:hint="@string/qr_value"
+        android:padding="16dp"
+        android:textColorHint="@color/login_form_details_light" />
+
+    <Button
+        android:id="@+id/btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/btn_bg"
+        android:padding="20dp"
+        android:text="@string/generate_qr"
+        android:textColor="@color/login_form_details_medium" />
+
+    <ImageView
+        android:id="@+id/qr"
+        android:layout_width="match_parent"
+        android:layout_height="312dp"
+        android:layout_margin="48dp"
+        android:layout_marginTop="16dp"
+        android:padding="20dp"
+        android:text="@string/generate_qr"
+         />
+
+</LinearLayout>

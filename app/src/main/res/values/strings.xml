@@ -8,6 +8,12 @@
     <string name="error_cannot_add_to_feature_table">Cannot add a feature to this feature table</string>
     <string name="error_applying_edits">Exception applying edits on server: %s</string>
 
+    <string name="scan_app_name">Qr App</string>
+    <string name="scan_again">scan again</string>
+    <string name="generate_qr">GENERATE QR</string>
+    <string name="qr_value">qr value</string>
+    <string name="scan_qr">SCAN QR</string>
+
 
     <string name="email_address">Email address</string>
     <string name="password">Password</string>
