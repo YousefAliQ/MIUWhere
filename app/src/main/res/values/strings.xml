@@ -40,6 +40,23 @@
 
 
 
+    <string name = "DarkGrayCanvasVector">DarkGrayCanvasVector</string>
+    <string name = "Imagery">Imagery</string>
+    <string name = "ImageryWithLabels">ImageryWithLabels</string>
+    <string name = "LightGrayCanvas">LightGrayCanvas</string>
+    <string name = "LightGrayCanvasVector">LightGrayCanvasVector</string>
+    <string name = "NationalGeographic">NationalGeographic</string>
+    <string name = "NavigationVector">NavigationVector</string>
+    <string name = "Oceans">Oceans</string>
+    <string name = "OpenStreetMap">OpenStreetMap</string>
+    <string name = "Streets">Streets</string>
+    <string name = "StreetsNightVector">StreetsNightVector</string>
+    <string name = "StreetsVector">StreetsVector</string>
+    <string name = "StreetsWithReliefVector">StreetsWithReliefVector</string>
+    <string name = "TerrainWithLabels">TerrainWithLabels</string>
+    <string name = "TerrainWithLabelsVector">TerrainWithLabelsVector</string>
+    <string name = "Topographic">Topographic</string>
+    <string name = "TopographicVector">TopographicVector</string>
 
 
     <string name="addBuildingTitle"> Add new Building </string>
