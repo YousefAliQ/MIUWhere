@@ -71,7 +71,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         contentValues.put(KEY_LATITUDE, obj.latitude)
         contentValues.put(KEY_LONGITUDE, obj.longitude)
         contentValues.put(KEY_NAME, obj.name)
-        contentValues.put(KEY_BUILD_TYPE, obj.type)
+        contentValues.put(KEY_BUILD_TYPE, obj.desc)
         // Second argument - want to insert any column value nullable
         db.insert(TABLE_BUILDING, null, contentValues)
     }
