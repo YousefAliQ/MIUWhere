@@ -10,6 +10,7 @@ import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
@@ -33,6 +34,7 @@ import com.esri.arcgisruntime.mapping.view.LocationDisplay.DataSourceStatusChang
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol
 import com.esri.arcgisruntime.symbology.TextSymbol
+import edu.mum.mumwhere.Models.Building
 import edu.mum.mumwhere.spinner.ItemData
 import edu.mum.mumwhere.spinner.SpinnerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
@@ -42,7 +44,7 @@ import java.util.concurrent.ExecutionException
 
 class MainActivity : AppCompatActivity() {
 
-
+    internal var dbHelper = DatabaseHelper(this)
     private lateinit var mNavigationDrawerItemTitles: Array<String>
     private val wgs84 = SpatialReference.create(4236)
     private lateinit var mMapView: MapView
@@ -61,6 +63,22 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        //Code : Adnan : For DataBase Inintialization
+        var data:Building=Building(1,"google.com",23.22,34.43,"Argiru","Eating")
+        var data1:Building=Building(1,"ADNAN.com",323.22,53.43,"STUDENT LOUNGE","ENTERTAINMENT")
+        var data2:Building=Building(1,"YOUSEF.com",232.22,34.43,"BUILDING144","LIVING")
+        var data3:Building=Building(1,"SIBTAIN.com",656.22,223.43,"BUILDING141","LIVING")
+
+        //dbHelper.insertDataintoLogin()
+        dbHelper.insertdataintoBuilding(data)
+        dbHelper.insertdataintoBuilding(data1)
+        dbHelper.insertdataintoBuilding(data2)
+        dbHelper.insertdataintoBuilding(data3)
+        //dbHelper.insertdataintoOffice("Clerk",2)
+        //dbHelper.insertdataintoClassroom("WAP","VERILHALL",3)
+        //dbHelper.insertdataintoPOI("Entertainment",3)
+        Log.d("Insert data manually","message")
+        //End here
 
 
 
@@ -76,7 +94,6 @@ class MainActivity : AppCompatActivity() {
             // set opening basemap title to Topographic
             title = "MIU Where?"
         }
-
 
         // TODO : mapping function to fix the shifting issue
         //-91.96765780448914,41.015310287475586
@@ -166,95 +183,95 @@ class MainActivity : AppCompatActivity() {
             override fun onSingleTapConfirmed(event: MotionEvent): Boolean { // create a point from where the user clicked
 
                 try {
-                    val point =
-                        android.graphics.Point(event.x.toInt(), event.y.toInt())
-                    // create a map point from a point
-                    mapPoint =
-                        mMapView.screenToLocation(point)
+                val point =
+                    android.graphics.Point(event.x.toInt(), event.y.toInt())
+                // create a map point from a point
+                mapPoint =
+                    mMapView.screenToLocation(point)
 
-                    // add/delete/update a new feature if its on the edit mode.
-                    if (rbAddFeature.isChecked) {
-                        addFeature(mapPoint)
-                    } else if (rbUpdateFeature.isChecked) {
-                        // TODO : implement update feature
+                // add/delete/update a new feature if its on the edit mode.
+                if (rbAddFeature.isChecked){
+                    addFeature(mapPoint)
+                }else if (rbUpdateFeature.isChecked){
+                    // TODO : implement update feature
 
-                        // identify graphics on the graphics overlay
-                        // identify graphics on the graphics overlay
-                        val identifyGraphic =
-                            mMapView.identifyGraphicsOverlayAsync(
-                                graphicsOverlay,
-                                point,
-                                10.0,
-                                false,
-                                2
-                            )
+                    // identify graphics on the graphics overlay
+                    // identify graphics on the graphics overlay
+                    val identifyGraphic =
+                        mMapView.identifyGraphicsOverlayAsync(
+                            graphicsOverlay,
+                            point,
+                            10.0,
+                            false,
+                            2
+                        )
 
-                        identifyGraphic.addDoneListener {
-                            try {
-                                val grOverlayResult =
-                                    identifyGraphic.get()
-                                // get the list of graphics returned by identify graphic overlay
-                                val graphic =
-                                    grOverlayResult.graphics
-                                // get size of list in results
-                                val identifyResultSize = graphic.size
-                                if (!graphic.isEmpty()) { // show a toast message if graphic was returned
-                                    Toast.makeText(
-                                        applicationContext,
-                                        "Tapped on $identifyResultSize Graphic",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-                            } catch (ie: InterruptedException) {
-                                ie.printStackTrace()
-                            } catch (ie: ExecutionException) {
-                                ie.printStackTrace()
+                    identifyGraphic.addDoneListener {
+                        try {
+                            val grOverlayResult =
+                                identifyGraphic.get()
+                            // get the list of graphics returned by identify graphic overlay
+                            val graphic =
+                                grOverlayResult.graphics
+                            // get size of list in results
+                            val identifyResultSize = graphic.size
+                            if (!graphic.isEmpty()) { // show a toast message if graphic was returned
+                                Toast.makeText(
+                                    applicationContext,
+                                    "Tapped on $identifyResultSize Graphic",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
+                        } catch (ie: InterruptedException) {
+                            ie.printStackTrace()
+                        } catch (ie: ExecutionException) {
+                            ie.printStackTrace()
                         }
-                    } else if (rbDeleteFeature.isChecked) {
-                        // TODO : implement delete feature
+                    }
+                }else if (rbDeleteFeature.isChecked){
+                    // TODO : implement delete feature
 
-                        // identify graphics on the graphics overlay
-                        // identify graphics on the graphics overlay
-                        val identifyGraphic =
-                            mMapView.identifyGraphicsOverlayAsync(
-                                graphicsOverlay,
-                                point,
-                                25.0,
-                                false,
-                                2
-                            )
+                    // identify graphics on the graphics overlay
+                    // identify graphics on the graphics overlay
+                    val identifyGraphic =
+                        mMapView.identifyGraphicsOverlayAsync(
+                            graphicsOverlay,
+                            point,
+                            25.0,
+                            false,
+                            2
+                        )
 
 
-                        identifyGraphic.addDoneListener {
-                            try {
-                                val grOverlayResult =
-                                    identifyGraphic.get()
-                                // get the list of graphics returned by identify graphic overlay
-                                val graphics =
-                                    grOverlayResult.graphics
-                                // get size of list in results
-                                val identifyResultSize = graphics.size
-                                if (!graphics.isEmpty()) { // show a toast message if graphic was returned
+                    identifyGraphic.addDoneListener {
+                        try {
+                            val grOverlayResult =
+                                identifyGraphic.get()
+                            // get the list of graphics returned by identify graphic overlay
+                            val graphics =
+                                grOverlayResult.graphics
+                            // get size of list in results
+                            val identifyResultSize = graphics.size
+                            if (!graphics.isEmpty()) { // show a toast message if graphic was returned
 
-                                    graphicsOverlay!!.graphics.removeAll(graphics)
+                                graphicsOverlay!!.graphics.removeAll(graphics)
 
-                                    Toast.makeText(
-                                        applicationContext,
-                                        "Deleted successfully!",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-                            } catch (ie: InterruptedException) {
-                                ie.printStackTrace()
-                            } catch (ie: ExecutionException) {
-                                ie.printStackTrace()
+                                Toast.makeText(
+                                    applicationContext,
+                                    "Deleted successfully!",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
+                        } catch (ie: InterruptedException) {
+                            ie.printStackTrace()
+                        } catch (ie: ExecutionException) {
+                            ie.printStackTrace()
                         }
-
                     }
 
-                    return super.onSingleTapConfirmed(event)
+                }
+
+                return super.onSingleTapConfirmed(event)
                 } catch ( e: Exception ) {
                     Toast.makeText(
                         applicationContext,
