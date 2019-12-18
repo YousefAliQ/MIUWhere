@@ -5,6 +5,23 @@
 --><string name="app_name">엄마 어디</string>
     <string name="location_permission_denied">위치 권한이 거부되어 LocationDisplayManager를 실행할 수 없습니다.</string>
 
+    <string name="appname">ACTVDemo</string>
+    <string-array name="countries">
+        <item>India</item>
+        <item>Indonasia</item>
+        <item>USA</item>
+        <item>Asia</item>
+        <item>Africa</item>
+        <item>Siria</item>
+        <item>Sri Lanka</item>
+        <item>Canada</item>
+        <item>Koria</item>
+        <item>Island</item>
+        <item>Bangaladesh</item>
+        <item>Nepal</item>
+    </string-array>
+
+
     <string name="service_layer_url">http://sampleserver6.arcgisonline.com/arcgis/rest/services/DamageAssessment/FeatureServer/0</string>
     <string name="feature_added">기능이 성공적으로 추가되었습니다</string>
 

@@ -4,20 +4,22 @@ package edu.mum.mumwhere
 
 import android.Manifest
 import android.app.Activity
+import android.app.SearchManager
 import android.app.ProgressDialog.show
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Color
+import android.opengl.Visibility
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -35,7 +37,6 @@ import com.esri.arcgisruntime.mapping.view.LocationDisplay.DataSourceStatusChang
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol
 import com.esri.arcgisruntime.symbology.TextSymbol
-import edu.mum.mumwhere.Models.Building
 import edu.mum.mumwhere.spinner.ItemData
 import edu.mum.mumwhere.spinner.SpinnerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
@@ -43,9 +44,9 @@ import java.util.*
 import java.util.concurrent.ExecutionException
 
 
-class MainActivity : AppCompatActivity() , View.OnClickListener, IdentifyFeature.DialogListener{
+class MainActivity : AppCompatActivity() {
 
-    internal var dbHelper = DatabaseHelper(this)
+
     private lateinit var mNavigationDrawerItemTitles: Array<String>
     private val wgs84 = SpatialReference.create(4236)
     private lateinit var mMapView: MapView
@@ -55,6 +56,7 @@ class MainActivity : AppCompatActivity() , View.OnClickListener, IdentifyFeature
     private var mBasemap: Spinner? = null
     lateinit var mapPoint: Point
     lateinit var isAdminMode: String
+    private lateinit var  strings1: Array<String>
 
     private val requestCode = 2
     var reqPermissions = arrayOf(
@@ -67,16 +69,51 @@ class MainActivity : AppCompatActivity() , View.OnClickListener, IdentifyFeature
         setContentView(R.layout.activity_main)
 
 
-        initDatabase()
+        strings1 = arrayOf("Asia","Australia","America","Belgium","Brazil","Canada","California","Dubai","France","Paris")
+        // Get the XML configured vales into the Activity and stored into an String Array
+        //strings = getResources().getStringArray(R.array.countries);
+        /* Pass three parameters to the ArrayAdapter
+        1. The current context,
+        2. The resource ID for a built-in layout file containing a TextView to use when instantiating views,
+           which are available in android.R.layout
+        3. The objects to represent in the values
+        */
+        val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, strings1)
+        actv2.setAdapter(adapter)
+        actv2.threshold = 1
+
+        actv2.onItemClickListener =
+            AdapterView.OnItemClickListener { parent, view, position, id ->
+                Toast.makeText(this,"Item selected is " + parent.getItemAtPosition(position),Toast.LENGTH_LONG).show()
+
+            }
+
+
+
+
+        editOptions.visibility = View.INVISIBLE
+
+
+        val geti = intent
+
+        val checki = geti.getStringExtra("isLogin")
+
+        val spfr = getSharedPreferences("login",Context.MODE_PRIVATE)
+        val name= spfr.getString("username","")
+        val check = spfr.getString("isLogin","")
+
+        if (checki=="y"){
+            editOptions.visibility = View.VISIBLE
+        }
+
         initMap()
         registerChangeBasemap()
         registerCurrentLocation()
         updateOnTouchListener()
         displayPoints()
 
-
         supportActionBar?.apply {
-            //   setDisplayHomeAsUpEnabled(true)
+         //   setDisplayHomeAsUpEnabled(true)
             //  setHomeButtonEnabled(true)
             // set opening basemap title to Topographic
             title = "MIU Where?"
@@ -85,30 +122,6 @@ class MainActivity : AppCompatActivity() , View.OnClickListener, IdentifyFeature
         // TODO : mapping function to fix the shifting issue
         //-91.96765780448914,41.015310287475586
         //-91.96036219596863,41.0209321975708
-
-    }
-
-    private fun initDatabase() {
-
-        //Code : Adnan : For DataBase Inintialization
-        var data:Building=Building("Argiro","Student Center","image_url",41.01614713668823,-91.96762561798096)
-        var data1:Building=Building("Argiro","Student Center","image_url",41.0161471366844,-91.96762561798096)
-        var data2:Building=Building("Argiro","Student Center","image_url",41.0161471366822,-91.96762561798096)
-        var data3:Building=Building("Argiro","Student Center","image_url",41.01614713668999,-91.96762561798096)
-
-        //dbHelper.insertDataintoLogin()
-        dbHelper.insertdataintoBuilding(data)
-
-        dbHelper.insertdataintoBuilding(data1)
-        dbHelper.insertdataintoBuilding(data2)
-        dbHelper.insertdataintoBuilding(data3)
-        //dbHelper.insertdataintoOffice("Clerk",2)
-        //dbHelper.insertdataintoClassroom("WAP","VERILHALL",3)
-        //dbHelper.insertdataintoPOI("Entertainment",3)
-        Log.d("Insert data manually","message")
-        //End here
-
-
 
     }
 
@@ -128,7 +141,6 @@ class MainActivity : AppCompatActivity() , View.OnClickListener, IdentifyFeature
         // inflate MapView from layout
         mMapView = findViewById(R.id.mapView) as MapView
 
-
         val map = ArcGISMap(Basemap.Type.IMAGERY,41.01614713668823,-91.96762561798096, 17)
 
         // add graphics overlay to MapView.
@@ -137,20 +149,6 @@ class MainActivity : AppCompatActivity() , View.OnClickListener, IdentifyFeature
 
         // set the map to be displayed in the layout's MapView
         mMapView.map = map
-
-        editOptions.visibility = View.INVISIBLE
-
-        val geti = intent
-
-        isAdminMode = geti.getStringExtra("isLogin")?: ""
-
-        val spfr = getSharedPreferences("login",Context.MODE_PRIVATE)
-        val name= spfr.getString("username","")
-        val check = spfr.getString("isLogin","")
-
-        if (isAdminMode=="y"){
-            editOptions.visibility = View.VISIBLE
-        }
 
     }
 
@@ -188,199 +186,121 @@ class MainActivity : AppCompatActivity() , View.OnClickListener, IdentifyFeature
         }
     }
 
-    private fun handleAdminEvents(event: MotionEvent, point:android.graphics.Point){
-
-        // add/delete/update a new feature if its on the edit mode.
-        if (rbAddFeature.isChecked){
-            addFeature(mapPoint)
-        }else if (rbUpdateFeature.isChecked){
-            // TODO : implement update feature
-
-            // identify graphics on the graphics overlay
-            // identify graphics on the graphics overlay
-            val identifyGraphic =
-                mMapView.identifyGraphicsOverlayAsync(
-                    graphicsOverlay,
-                    point,
-                    10.0,
-                    false,
-                    2
-                )
-
-            identifyGraphic.addDoneListener {
-                try {
-                    val grOverlayResult =
-                        identifyGraphic.get()
-                    // get the list of graphics returned by identify graphic overlay
-                    val graphic =
-                        grOverlayResult.graphics
-                    // get size of list in results
-                    val identifyResultSize = graphic.size
-                    if (!graphic.isEmpty()) { // show a toast message if graphic was returned
-                        Toast.makeText(
-                            applicationContext,
-                            "Tapped on $identifyResultSize Graphic",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                } catch (ie: InterruptedException) {
-                    ie.printStackTrace()
-                } catch (ie: ExecutionException) {
-                    ie.printStackTrace()
-                }
-            }
-        }else if (rbDeleteFeature.isChecked){
-            // TODO : implement delete feature
-
-            // identify graphics on the graphics overlay
-            // identify graphics on the graphics overlay
-            val identifyGraphic =
-                mMapView.identifyGraphicsOverlayAsync(
-                    graphicsOverlay,
-                    point,
-                    25.0,
-                    false,
-                    2
-                )
-
-
-            identifyGraphic.addDoneListener {
-                try {
-                    val grOverlayResult =
-                        identifyGraphic.get()
-                    // get the list of graphics returned by identify graphic overlay
-                    val graphics =
-                        grOverlayResult.graphics
-                    // get size of list in results
-                    val identifyResultSize = graphics.size
-                    if (!graphics.isEmpty()) { // show a toast message if graphic was returned
-
-                        graphicsOverlay!!.graphics.removeAll(graphics)
-
-                        Toast.makeText(
-                            applicationContext,
-                            "Deleted successfully!",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                } catch (ie: InterruptedException) {
-                    ie.printStackTrace()
-                } catch (ie: ExecutionException) {
-                    ie.printStackTrace()
-                }
-            }
-
-        }
-
-    }
 
     private fun updateOnTouchListener() {
         mapView.setOnTouchListener(object : DefaultMapViewOnTouchListener(this, mapView) {
             override fun onSingleTapConfirmed(event: MotionEvent): Boolean { // create a point from where the user clicked
 
-                try {
                 val point =
                     android.graphics.Point(event.x.toInt(), event.y.toInt())
                 // create a map point from a point
-                mapPoint =
+                 mapPoint =
                     mMapView.screenToLocation(point)
 
-                    if (isAdminMode == "y")
-                        handleAdminEvents(event,point)
-                    else
-                    {
-                        // handle identify for regular user
-                        // identify graphics on the graphics overlay
-                        val identifyGraphic =
-                            mMapView.identifyGraphicsOverlayAsync(
-                                graphicsOverlay,
-                                point,
-                                10.0,
-                                false,
-                                2
-                            )
+                // add/delete/update a new feature if its on the edit mode.
+                if (rbAddFeature.isChecked){
+                    addFeature(mapPoint)
+                }else if (rbUpdateFeature.isChecked){
+                    // TODO : implement update feature
 
-                        identifyGraphic.addDoneListener {
-                            try {
-                                val grOverlayResult =
-                                    identifyGraphic.get()
-                                // get the list of graphics returned by identify graphic overlay
-                                val graphic =
-                                    grOverlayResult.graphics
-                                // get size of list in results
-                                val identifyResultSize = graphic.size
-                                if (!graphic.isEmpty()) { // show a toast message if graphic was returned
+                    // identify graphics on the graphics overlay
+                    // identify graphics on the graphics overlay
+                    val identifyGraphic =
+                        mMapView.identifyGraphicsOverlayAsync(
+                            graphicsOverlay,
+                            point,
+                            10.0,
+                            false,
+                            2
+                        )
 
-                                    val dialogFragment = IdentifyFeature()
-                                    val bundle = Bundle()
-                                    bundle.putString("name", graphic[0].attributes.get("NAME").toString())
-                                    bundle.putString("desc", graphic[0].attributes.get("DESC").toString())
-                                    dialogFragment.arguments = bundle
-                                    val ft = supportFragmentManager.beginTransaction()
-                                    ft.replace(R.id.frameLayout, dialogFragment)
-                                    ft.commit()
-
-                                }
-                            } catch (ie: InterruptedException) {
-                                ie.printStackTrace()
-                            } catch (ie: ExecutionException) {
-                                ie.printStackTrace()
+                    identifyGraphic.addDoneListener {
+                        try {
+                            val grOverlayResult =
+                                identifyGraphic.get()
+                            // get the list of graphics returned by identify graphic overlay
+                            val graphic =
+                                grOverlayResult.graphics
+                            // get size of list in results
+                            val identifyResultSize = graphic.size
+                            if (!graphic.isEmpty()) { // show a toast message if graphic was returned
+                                Toast.makeText(
+                                    applicationContext,
+                                    "Tapped on $identifyResultSize Graphic",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
+                        } catch (ie: InterruptedException) {
+                            ie.printStackTrace()
+                        } catch (ie: ExecutionException) {
+                            ie.printStackTrace()
                         }
+                    }
+                }else if (rbDeleteFeature.isChecked){
+                    // TODO : implement delete feature
 
+                    // identify graphics on the graphics overlay
+                    // identify graphics on the graphics overlay
+                    val identifyGraphic =
+                        mMapView.identifyGraphicsOverlayAsync(
+                            graphicsOverlay,
+                            point,
+                            25.0,
+                            false,
+                            2
+                        )
+
+
+                    identifyGraphic.addDoneListener {
+                        try {
+                            val grOverlayResult =
+                                identifyGraphic.get()
+                            // get the list of graphics returned by identify graphic overlay
+                            val graphics =
+                                grOverlayResult.graphics
+                            // get size of list in results
+                            val identifyResultSize = graphics.size
+                            if (!graphics.isEmpty()) { // show a toast message if graphic was returned
+
+                                graphicsOverlay!!.graphics.removeAll(graphics)
+
+                                Toast.makeText(
+                                    applicationContext,
+                                    "Deleted successfully!",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        } catch (ie: InterruptedException) {
+                            ie.printStackTrace()
+                        } catch (ie: ExecutionException) {
+                            ie.printStackTrace()
+                        }
                     }
 
+                }
 
                 return super.onSingleTapConfirmed(event)
-                } catch ( e: Exception ) {
-                    Toast.makeText(
-                        applicationContext,
-                        "Check your internet, Please!",
-                        Toast.LENGTH_LONG
-                    )
-                }
-                return false
             }
         })
     }
 
     private fun displayPoints() {
 
-        // reading all data from buildings table
-        val res = dbHelper.allDataBuilding
-        if (res.count == 0) {
-            //showDialog("Error", "No Data Found")
-            Toast.makeText(applicationContext, "No Features!" , Toast.LENGTH_LONG)
-        }
-        val buffer = StringBuffer()
+        // TODO : read all points from building table and add it to the graphicsOverlay.
 
-        // show data on the map.
-        while (res.moveToNext()) {
+        // add graphics overlay to MapView.
+        val graphicsOverlay: GraphicsOverlay? = addGraphicsOverlay(mMapView)
 
-            /*buffer.append("BUILD_ID :" + res.getString(0) + "\n")
-            buffer.append("IMAGE :" + res.getString(1) + "\n")
-            buffer.append("LATITUDE :" + res.getString(2) + "\n")
-            buffer.append("LONGITUDE :" + res.getString(3) + "\n\n")
-            buffer.append("NAME :" + res.getString(4) + "\n\n")
-            buffer.append("DESC :" + res.getString(5) + "\n\n")*/
+        val mapPoint: com.esri.arcgisruntime.geometry.Point = Point(-91.96036219596863, 41.0209321975708,wgs84)
 
-            var mapPoint: com.esri.arcgisruntime.geometry.Point = Point((res.getString(3)).toDouble(), (res.getString(2)).toDouble(),wgs84)
+        val attributes: MutableMap<String, Any> =
+            HashMap()
+        attributes["newPlace"] = "Argiro"
+        attributes["primcause"] = "Earthquake"
 
-            var attributes: MutableMap<String, Any> =
-                HashMap()
-            attributes["BUILD_ID"] = res.getString(0)
-            attributes["IMAGE"] = res.getString(1)
-            attributes["LATITUDE"] = res.getString(2)
-            attributes["LONGITUDE"] = res.getString(3)
-            attributes["NAME"] = res.getString(4)
-            attributes["DESC"] = res.getString(5)
+        addBuoyPoints(graphicsOverlay!!, mapPoint, attributes)
 
-            addBuoyPoints(graphicsOverlay!!, mapPoint, attributes)
-
-            addText(graphicsOverlay!!, mapPoint, attributes)
-        }
-
-
+        addText(graphicsOverlay!!, mapPoint, attributes)
 
 
     }
@@ -531,21 +451,17 @@ class MainActivity : AppCompatActivity() , View.OnClickListener, IdentifyFeature
 
         var i = Intent(this, EditorActivity::class.java)
         startActivityForResult(i, 1)
-
-
-
     }
 
 
 
+      override fun onActivityResult( requestCode: Int,  resultCode:Int,  data:Intent?) {
+          super.onActivityResult(requestCode,resultCode,data)
 
-    override fun onActivityResult( requestCode: Int,  resultCode:Int,  data:Intent?) {
-        super.onActivityResult(requestCode,resultCode,data)
-
-        if (1 == requestCode) {
+          if (1 == requestCode) {
             if(resultCode == Activity.RESULT_OK){
 
-                Toast.makeText(this.applicationContext, data?.data.toString() , Toast.LENGTH_LONG)
+            Toast.makeText(this.applicationContext, data?.data.toString() , Toast.LENGTH_LONG)
 
 
                 val attributes: MutableMap<String, Any> =
@@ -557,9 +473,9 @@ class MainActivity : AppCompatActivity() , View.OnClickListener, IdentifyFeature
 
                 addText(graphicsOverlay!!, mapPoint, attributes)
 
-            }
-        }
+       }
     }
+}
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -578,15 +494,16 @@ class MainActivity : AppCompatActivity() , View.OnClickListener, IdentifyFeature
             item.title.toString(),
             Toast.LENGTH_LONG).show()
 
-        if (item.title.toString() == "Login"){
+        if (item.title.toString() == resources.getString(R.string.login_menu)){
 
-            var i = Intent(this, LoginActivity::class.java)
-            startActivity(i)
-            return super.onOptionsItemSelected(item)
+        var i = Intent(this, LoginActivity::class.java)
+        startActivity(i)
+        return super.onOptionsItemSelected(item)
         }
 
 
-        if (item.title.toString() == "Scan QR"){
+
+        if (item.title.toString() == resources.getString(R.string.scan_menu)){
 
             var i = Intent(this, ScanMainActivity::class.java)
             startActivity(i)
@@ -595,7 +512,7 @@ class MainActivity : AppCompatActivity() , View.OnClickListener, IdentifyFeature
 
 
 
-        if (item.title.toString() == "About Us"){
+        if (item.title.toString() == resources.getString(R.string.about_menu)){
 
             var i = Intent(this, AboutActivity::class.java)
             startActivity(i)
@@ -684,7 +601,7 @@ class MainActivity : AppCompatActivity() , View.OnClickListener, IdentifyFeature
             SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.RED, 10.0f)
         buoyMarker.outline = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLACK,1.0f)
         //create graphics
-        val buoyGraphic1 = Graphic(buoy1Loc,attr, buoyMarker)
+        val buoyGraphic1 = Graphic(buoy1Loc, buoyMarker)
 
         //add the graphics to the graphics overlay
         graphicOverlay.graphics.add(buoyGraphic1)
@@ -697,7 +614,7 @@ class MainActivity : AppCompatActivity() , View.OnClickListener, IdentifyFeature
 
         //create text symbols
         val bassRockSymbol = TextSymbol(
-            20.0f, attr.get("NAME").toString(), Color.rgb(0, 0, 230),
+            20.0f, attr.get("newPlace").toString(), Color.rgb(0, 0, 230),
             TextSymbol.HorizontalAlignment.LEFT, TextSymbol.VerticalAlignment.BOTTOM
         )
 
@@ -705,7 +622,7 @@ class MainActivity : AppCompatActivity() , View.OnClickListener, IdentifyFeature
         bassRockSymbol.haloColor = titleColor
 
         //define a graphic from the geometry and symbol
-        val bassRockGraphic = Graphic(bassLocation, attr, bassRockSymbol)
+        val bassRockGraphic = Graphic(bassLocation, bassRockSymbol)
 
         //add the text to the graphics overlay
         graphicOverlay.graphics.add(bassRockGraphic)
@@ -799,20 +716,6 @@ class MainActivity : AppCompatActivity() , View.OnClickListener, IdentifyFeature
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
-    }
-
-    override fun onClick(v: View?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-
-        val dialogFragment = IdentifyFeature()
-        val ft = supportFragmentManager.beginTransaction()
-        ft.replace(R.id.frameLayout, dialogFragment)
-        ft.commit()
-
-    }
-
-    override fun onFinishEditDialog(inputText: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
 }
