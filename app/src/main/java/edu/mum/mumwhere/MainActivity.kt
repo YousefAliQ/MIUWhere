@@ -5,6 +5,7 @@ package edu.mum.mumwhere
 import android.Manifest
 import android.app.Activity
 import android.app.SearchManager
+import android.app.ProgressDialog.show
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -16,8 +17,11 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
-import android.widget.*
+import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.ArrayAdapter
+import android.widget.Spinner
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.core.app.ActivityCompat
@@ -51,6 +55,7 @@ class MainActivity : AppCompatActivity() {
     private var mSpinner: Spinner? = null
     private var mBasemap: Spinner? = null
     lateinit var mapPoint: Point
+    lateinit var isAdminMode: String
     private lateinit var  strings1: Array<String>
 
     private val requestCode = 2
@@ -504,15 +509,6 @@ class MainActivity : AppCompatActivity() {
             startActivity(i)
             return super.onOptionsItemSelected(item)
         }
-        
-        
-        if (item.title.toString() == "Search") {
-
-            var i = Intent(this, SearchActivity::class.java)
-            startActivity(i)
-            return super.onOptionsItemSelected(item)
-        }
-
 
 
 
@@ -525,7 +521,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        else{  //for now, else will run route activity
+        else{   //for now, else will run route activity
 
             var r = Intent(this, RouteActivity::class.java)
             r.putExtra("sourceY", "41.00612")
