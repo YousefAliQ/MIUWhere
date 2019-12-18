@@ -54,27 +54,34 @@ class IdentifyFeature: DialogFragment()
 
             name.text =  "Building Name : " +  arguments?.getString("name")
             desc.text = "Building Name : "  +  arguments?.getString("desc")
-/*
-            val btnClassroom = view.findViewById<Button>(R.id.btnClassrooms)
+
+            val btnClassroom = view.findViewById<Button>(R.id.btnClassroom)
             btnClassroom.setOnClickListener(object: View.OnClickListener {
                 override fun onClick(view:View) {
                     dismiss()
                 }
             })
 
-            val btnProfessor = view.findViewById<Button>(R.id.btn)
-            btnClassroom.setOnClickListener(object: View.OnClickListener {
+            val btnOffices = view.findViewById<Button>(R.id.btnOffices)
+            btnOffices.setOnClickListener(object: View.OnClickListener {
                 override fun onClick(view:View) {
                     dismiss()
                 }
             })
 
             val btnServices = view.findViewById<Button>(R.id.btnServices)
-            btnClassroom.setOnClickListener(object: View.OnClickListener {
+            btnServices.setOnClickListener(object: View.OnClickListener {
                 override fun onClick(view:View) {
                     dismiss()
                 }
-            })*/
+            })
+
+            val btnDone = view.findViewById<Button>(R.id.btnDone)
+            btnDone.setOnClickListener(object: View.OnClickListener {
+                override fun onClick(view:View) {
+                    dismiss()
+                }
+            })
         }
         override fun onResume() {
             super.onResume()

@@ -332,6 +332,7 @@ class MainActivity : AppCompatActivity() , View.OnClickListener, IdentifyFeature
                                 val identifyResultSize = graphic.size
                                 if (!graphic.isEmpty()) { // show a toast message if graphic was returned
 
+
                                     val dialogFragment = IdentifyFeature()
                                     val bundle = Bundle()
                                     bundle.putString("name", graphic[0].attributes.get("NAME").toString())

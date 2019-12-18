@@ -62,6 +62,11 @@
     <string name = "TerrainWithLabelsVector">TerrainWithLabelsVector</string>
     <string name = "Topographic">Topographic</string>
     <string name = "TopographicVector">TopographicVector</string>
+    <string name = "offices">Offices</string>
+    <string name = "services">Services</string>
+    <string name = "classroom">Classroom</string>
+    <string name = "ok">Done</string>
+
 
 
     <string name="addBuildingTitle"> ADD NEW BUILDING </string>
