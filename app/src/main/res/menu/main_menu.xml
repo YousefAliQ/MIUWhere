@@ -21,4 +21,11 @@
         android:title="@string/scan_menu"
         app:showAsAction="never"/>
 
+    <item android:id="@+id/search"
+        android:title="Search"
+        android:icon="@drawable/ic_search"
+        app:showAsAction="never"
+        app:actionViewClass="android.widget.SearchView"
+        />
+
 </menu>

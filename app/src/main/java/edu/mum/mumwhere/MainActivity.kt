@@ -4,6 +4,7 @@ package edu.mum.mumwhere
 
 import android.Manifest
 import android.app.Activity
+import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -15,10 +16,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
-import android.widget.AdapterView
+import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
-import android.widget.Spinner
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.core.app.ActivityCompat
@@ -52,6 +51,7 @@ class MainActivity : AppCompatActivity() {
     private var mSpinner: Spinner? = null
     private var mBasemap: Spinner? = null
     lateinit var mapPoint: Point
+    private lateinit var  strings1: Array<String>
 
     private val requestCode = 2
     var reqPermissions = arrayOf(
@@ -62,6 +62,29 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+
+        strings1 = arrayOf("Asia","Australia","America","Belgium","Brazil","Canada","California","Dubai","France","Paris")
+        // Get the XML configured vales into the Activity and stored into an String Array
+        //strings = getResources().getStringArray(R.array.countries);
+        /* Pass three parameters to the ArrayAdapter
+        1. The current context,
+        2. The resource ID for a built-in layout file containing a TextView to use when instantiating views,
+           which are available in android.R.layout
+        3. The objects to represent in the values
+        */
+        val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, strings1)
+        actv2.setAdapter(adapter)
+        actv2.threshold = 1
+
+        actv2.onItemClickListener =
+            AdapterView.OnItemClickListener { parent, view, position, id ->
+                Toast.makeText(this,"Item selected is " + parent.getItemAtPosition(position),Toast.LENGTH_LONG).show()
+
+            }
+
+
+
 
         editOptions.visibility = View.INVISIBLE
 
@@ -481,6 +504,15 @@ class MainActivity : AppCompatActivity() {
             startActivity(i)
             return super.onOptionsItemSelected(item)
         }
+        
+        
+        if (item.title.toString() == "Search") {
+
+            var i = Intent(this, SearchActivity::class.java)
+            startActivity(i)
+            return super.onOptionsItemSelected(item)
+        }
+
 
 
 
@@ -493,7 +525,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        else{   //for now, else will run route activity
+        else{  //for now, else will run route activity
 
             var r = Intent(this, RouteActivity::class.java)
             r.putExtra("sourceY", "41.00612")

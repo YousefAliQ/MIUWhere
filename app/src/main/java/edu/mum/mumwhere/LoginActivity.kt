@@ -22,8 +22,6 @@ class LoginActivity : AppCompatActivity() {
         spf = getSharedPreferences("login", Context.MODE_PRIVATE)
         // key, value pair. Here by default name is not found assign " no value"
 
-
-
         val name = spf.getString("name", "")
         val pwd = spf.getString("pass", "")
         val isLogged = spf.getString("isL","")
