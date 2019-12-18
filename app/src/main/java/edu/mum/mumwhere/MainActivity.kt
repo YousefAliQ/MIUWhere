@@ -10,6 +10,7 @@ import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
@@ -33,6 +34,7 @@ import com.esri.arcgisruntime.mapping.view.LocationDisplay.DataSourceStatusChang
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol
 import com.esri.arcgisruntime.symbology.TextSymbol
+import edu.mum.mumwhere.Models.Building
 import edu.mum.mumwhere.spinner.ItemData
 import edu.mum.mumwhere.spinner.SpinnerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
@@ -42,7 +44,7 @@ import java.util.concurrent.ExecutionException
 
 class MainActivity : AppCompatActivity() {
 
-
+    internal var dbHelper = DatabaseHelper(this)
     private lateinit var mNavigationDrawerItemTitles: Array<String>
     private val wgs84 = SpatialReference.create(4236)
     private lateinit var mMapView: MapView
@@ -61,7 +63,21 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        //Code : Adnan : For DataBase Inintialization
+        var data:Building=Building(1,"google.com",23.22,34.43,"Argiru","Eating")
+        var data1:Building=Building(1,"ADNAN.com",323.22,53.43,"STUDENT LOUNGE","ENTERTAINMENT")
+        var data2:Building=Building(1,"YOUSEF.com",232.22,34.43,"BUILDING144","LIVING")
+        var data3:Building=Building(1,"SIBTAIN.com",656.22,223.43,"BUILDING141","LIVING")
+        dbHelper.insertDataintoLogin()
+        dbHelper.insertdataintoBuilding(data)
+        dbHelper.insertdataintoBuilding(data1)
+        dbHelper.insertdataintoBuilding(data2)
+        dbHelper.insertdataintoBuilding(data3)
+        //dbHelper.insertdataintoOffice("Clerk",2)
+        //dbHelper.insertdataintoClassroom("WAP","VERILHALL",3)
+        //dbHelper.insertdataintoPOI("Entertainment",3)
+        Log.d("Insert data manually","message")
+        //End here
         initMap()
         registerChangeBasemap()
         registerCurrentLocation()
@@ -108,7 +124,6 @@ class MainActivity : AppCompatActivity() {
         mMapView.map = map
 
     }
-
     /**
      * Select the Basemap item based on position in the navigation drawer
      *
@@ -456,7 +471,6 @@ class MainActivity : AppCompatActivity() {
             Toast.LENGTH_LONG).show()
 
         if (item.title.toString() == "Login"){
-
             var i = Intent(this, LoginActivity::class.java)
             startActivity(i)
             return super.onOptionsItemSelected(item)

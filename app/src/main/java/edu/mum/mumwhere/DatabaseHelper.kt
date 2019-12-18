@@ -6,6 +6,7 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
+import edu.mum.mumwhere.Models.Building
 
 /**
  * Let's start by creating our database CRUD helper class
@@ -24,7 +25,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         db.execSQL("CREATE TABLE $TABLE_LOGIN (ID INTEGER PRIMARY KEY " +
                 "AUTOINCREMENT,USERNAME TEXT,PASSWORD TEXT)")
        db.execSQL("CREATE TABLE $TABLE_BUILDING (BUILD_ID INTEGER PRIMARY KEY " +
-               "AUTOINCREMENT,IMAGE TEXT,LATITUDE TEXT,LONGITUDE TEXT)")
+               "AUTOINCREMENT,IMAGE TEXT,LATITUDE TEXT,LONGITUDE TEXT,NAME TEXT,TYPE TEXT)")
        db.execSQL("CREATE TABLE $TABLE_OFFICE (ID INTEGER PRIMARY KEY " +
                 "AUTOINCREMENT,CATEGORY TEXT,BUILD_ID INTEGER,FOREIGN KEY(BUILD_ID) REFERENCES $TABLE_BUILDING(ID))")
         db.execSQL("CREATE TABLE $TABLE_CLASSROOM (ID INTEGER PRIMARY KEY " +
@@ -63,12 +64,14 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         // Second argument - want to insert any column value nullable
         db.insert(TABLE_NAME, null, contentValues)
     }
-    fun insertdataintoBuilding(url: String, lat: String, long: String){
+    fun insertdataintoBuilding( obj:Building){
         val db=this.writableDatabase
         val contentValues = ContentValues()
-        contentValues.put(KEY_IMAGE, url)
-        contentValues.put(KEY_LATITUDE, lat)
-        contentValues.put(KEY_LONGITUDE, long)
+        contentValues.put(KEY_IMAGE, obj.image)
+        contentValues.put(KEY_LATITUDE, obj.latitude)
+        contentValues.put(KEY_LONGITUDE, obj.longitude)
+        contentValues.put(KEY_NAME, obj.name)
+        contentValues.put(KEY_BUILD_TYPE, obj.type)
         // Second argument - want to insert any column value nullable
         db.insert(TABLE_BUILDING, null, contentValues)
     }
@@ -98,21 +101,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         // Second argument - want to insert any column value nullable
         db.insert(TABLE_POI, null, contentValues)
     }
-//    fun insertDataintoBuilding(obj: Building){
-//        try {
-//            val db = this.writableDatabase
-//            val contentValues = ContentValues()
-//            contentValues.put(KEY_IMAGE, obj.image.toString())
-//            contentValues.put(KEY_LATITUDE, obj.latitude)
-//            contentValues.put(KEY_LONGITUDE, obj.latitude)
-//            // Second argument - want to insert any column value nullable
-//            db.insert(TABLE_BUILDING, null, contentValues)
-//        }
-//        catch (ex:Exception){
-//            ex.stackTrace
-//            Log.d("Building Insertion", "Error: " + ex.toString());
-//        }
-//    }
 
     // Insertion for Login
     fun insertDataintoLogin(){
@@ -132,6 +120,13 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         }
     }
 
+    //READING ALL DATA
+    val allDataBuilding : Cursor
+        get() {
+            val db = this.writableDatabase
+            val res = db.rawQuery("SELECT * FROM " + TABLE_BUILDING, null)
+            return res
+        }
     /**
      * Let's create  a method to update a row with new field values.
      */
@@ -202,6 +197,8 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         var KEY_IMAGE = "IMAGE"
         var KEY_LATITUDE = "LATITUDE"
         var KEY_LONGITUDE = "LONGITUDE"
+        var KEY_NAME="NAME"
+        var KEY_BUILD_TYPE="TYPE"
         var KEY_CATEGORY = "CATEGORY"
         var KEY_CURR_COURSE= "CURR_COURSE"
         var KEY_CURR_INSTRUCTOR_LOC="CURR_INST_LOCATION"
