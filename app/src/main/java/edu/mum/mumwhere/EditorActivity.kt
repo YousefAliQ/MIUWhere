@@ -24,8 +24,14 @@ class EditorActivity : AppCompatActivity() {
         var desc1=desc.text.toString()
             var data:Building=Building(name1,desc1,"google.com",lat,long)
             dbHelper.insertdataintoBuilding(data)
+            emptyfields()
             Log.d("buildingdata","success")
+            finish()
         }
-
     }
+    fun emptyfields(){
+        name.setText("")
+        desc.setText("")
+    }
+
 }
