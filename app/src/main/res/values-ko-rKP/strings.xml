@@ -34,6 +34,14 @@
     <string name="title_dashboard">계기반</string>
     <string name="title_notifications">알림</string>
     <string name="building_name">건물 이름</string>
+    <string name="login_menu">Login</string>
+    <string name="route_menu">Route</string>
+    <string name="about_menu">About Us</string>
+    <string name="scan_menu">Scan QR</string>
+    <string name="title_activity_map_and_details">MapAndDetailsActivity</string>
+
+
+
 
 
     <string name="stop">Stop</string>

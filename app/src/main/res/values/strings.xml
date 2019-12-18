@@ -16,7 +16,7 @@
 
 
     <string name="email_address">Email address</string>
-    <string name="password">Password</string>
+    <string name="password">Building Details</string>
     <string name="login_now">Login Now</string>
     <string name="don_t_remember_password">Don\'t Remember password?</string>
     <string name="dont_have_an_account">Don\'t have an account?</string>
@@ -27,6 +27,11 @@
     <string name="add">Add</string>
     <string name="update">Update</string>
     <string name="delete">Delete</string>
+    <string name="login_menu">Login</string>
+    <string name="route_menu">Route</string>
+    <string name="about_menu">About Us</string>
+    <string name="scan_menu">Scan QR</string>
+    <string name="title_activity_map_and_details">MapAndDetailsActivity</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
@@ -59,5 +64,5 @@
     <string name = "TopographicVector">TopographicVector</string>
 
 
-    <string name="addBuildingTitle"> Add new Building </string>
+    <string name="addBuildingTitle"> ADD NEW BUILDING </string>
 </resources>

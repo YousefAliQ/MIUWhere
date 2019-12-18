@@ -62,6 +62,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+
+
         initMap()
         registerChangeBasemap()
         registerCurrentLocation()
@@ -74,6 +76,7 @@ class MainActivity : AppCompatActivity() {
             // set opening basemap title to Topographic
             title = "MIU Where?"
         }
+
 
         // TODO : mapping function to fix the shifting issue
         //-91.96765780448914,41.015310287475586
@@ -106,6 +109,20 @@ class MainActivity : AppCompatActivity() {
 
         // set the map to be displayed in the layout's MapView
         mMapView.map = map
+
+        editOptions.visibility = View.INVISIBLE
+
+        val geti = intent
+
+        val checki = geti.getStringExtra("isLogin")
+
+        val spfr = getSharedPreferences("login",Context.MODE_PRIVATE)
+        val name= spfr.getString("username","")
+        val check = spfr.getString("isLogin","")
+
+        if (checki=="y"){
+            editOptions.visibility = View.VISIBLE
+        }
 
     }
 
@@ -148,95 +165,104 @@ class MainActivity : AppCompatActivity() {
         mapView.setOnTouchListener(object : DefaultMapViewOnTouchListener(this, mapView) {
             override fun onSingleTapConfirmed(event: MotionEvent): Boolean { // create a point from where the user clicked
 
-                val point =
-                    android.graphics.Point(event.x.toInt(), event.y.toInt())
-                // create a map point from a point
-                mapPoint =
-                    mMapView.screenToLocation(point)
+                try {
+                    val point =
+                        android.graphics.Point(event.x.toInt(), event.y.toInt())
+                    // create a map point from a point
+                    mapPoint =
+                        mMapView.screenToLocation(point)
 
-                // add/delete/update a new feature if its on the edit mode.
-                if (rbAddFeature.isChecked){
-                    addFeature(mapPoint)
-                }else if (rbUpdateFeature.isChecked){
-                    // TODO : implement update feature
+                    // add/delete/update a new feature if its on the edit mode.
+                    if (rbAddFeature.isChecked) {
+                        addFeature(mapPoint)
+                    } else if (rbUpdateFeature.isChecked) {
+                        // TODO : implement update feature
 
-                    // identify graphics on the graphics overlay
-                    // identify graphics on the graphics overlay
-                    val identifyGraphic =
-                        mMapView.identifyGraphicsOverlayAsync(
-                            graphicsOverlay,
-                            point,
-                            10.0,
-                            false,
-                            2
-                        )
+                        // identify graphics on the graphics overlay
+                        // identify graphics on the graphics overlay
+                        val identifyGraphic =
+                            mMapView.identifyGraphicsOverlayAsync(
+                                graphicsOverlay,
+                                point,
+                                10.0,
+                                false,
+                                2
+                            )
 
-                    identifyGraphic.addDoneListener {
-                        try {
-                            val grOverlayResult =
-                                identifyGraphic.get()
-                            // get the list of graphics returned by identify graphic overlay
-                            val graphic =
-                                grOverlayResult.graphics
-                            // get size of list in results
-                            val identifyResultSize = graphic.size
-                            if (!graphic.isEmpty()) { // show a toast message if graphic was returned
-                                Toast.makeText(
-                                    applicationContext,
-                                    "Tapped on $identifyResultSize Graphic",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                        identifyGraphic.addDoneListener {
+                            try {
+                                val grOverlayResult =
+                                    identifyGraphic.get()
+                                // get the list of graphics returned by identify graphic overlay
+                                val graphic =
+                                    grOverlayResult.graphics
+                                // get size of list in results
+                                val identifyResultSize = graphic.size
+                                if (!graphic.isEmpty()) { // show a toast message if graphic was returned
+                                    Toast.makeText(
+                                        applicationContext,
+                                        "Tapped on $identifyResultSize Graphic",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            } catch (ie: InterruptedException) {
+                                ie.printStackTrace()
+                            } catch (ie: ExecutionException) {
+                                ie.printStackTrace()
                             }
-                        } catch (ie: InterruptedException) {
-                            ie.printStackTrace()
-                        } catch (ie: ExecutionException) {
-                            ie.printStackTrace()
                         }
-                    }
-                }else if (rbDeleteFeature.isChecked){
-                    // TODO : implement delete feature
+                    } else if (rbDeleteFeature.isChecked) {
+                        // TODO : implement delete feature
 
-                    // identify graphics on the graphics overlay
-                    // identify graphics on the graphics overlay
-                    val identifyGraphic =
-                        mMapView.identifyGraphicsOverlayAsync(
-                            graphicsOverlay,
-                            point,
-                            25.0,
-                            false,
-                            2
-                        )
+                        // identify graphics on the graphics overlay
+                        // identify graphics on the graphics overlay
+                        val identifyGraphic =
+                            mMapView.identifyGraphicsOverlayAsync(
+                                graphicsOverlay,
+                                point,
+                                25.0,
+                                false,
+                                2
+                            )
 
 
-                    identifyGraphic.addDoneListener {
-                        try {
-                            val grOverlayResult =
-                                identifyGraphic.get()
-                            // get the list of graphics returned by identify graphic overlay
-                            val graphics =
-                                grOverlayResult.graphics
-                            // get size of list in results
-                            val identifyResultSize = graphics.size
-                            if (!graphics.isEmpty()) { // show a toast message if graphic was returned
+                        identifyGraphic.addDoneListener {
+                            try {
+                                val grOverlayResult =
+                                    identifyGraphic.get()
+                                // get the list of graphics returned by identify graphic overlay
+                                val graphics =
+                                    grOverlayResult.graphics
+                                // get size of list in results
+                                val identifyResultSize = graphics.size
+                                if (!graphics.isEmpty()) { // show a toast message if graphic was returned
 
-                                graphicsOverlay!!.graphics.removeAll(graphics)
+                                    graphicsOverlay!!.graphics.removeAll(graphics)
 
-                                Toast.makeText(
-                                    applicationContext,
-                                    "Deleted successfully!",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                    Toast.makeText(
+                                        applicationContext,
+                                        "Deleted successfully!",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            } catch (ie: InterruptedException) {
+                                ie.printStackTrace()
+                            } catch (ie: ExecutionException) {
+                                ie.printStackTrace()
                             }
-                        } catch (ie: InterruptedException) {
-                            ie.printStackTrace()
-                        } catch (ie: ExecutionException) {
-                            ie.printStackTrace()
                         }
+
                     }
 
+                    return super.onSingleTapConfirmed(event)
+                } catch ( e: Exception ) {
+                    Toast.makeText(
+                        applicationContext,
+                        "Check your internet, Please!",
+                        Toast.LENGTH_LONG
+                    )
                 }
-
-                return super.onSingleTapConfirmed(event)
+                return false
             }
         })
     }
