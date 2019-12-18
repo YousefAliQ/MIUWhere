@@ -42,6 +42,7 @@ import edu.mum.mumwhere.spinner.SpinnerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 import java.util.concurrent.ExecutionException
+import kotlin.collections.ArrayList
 
 
 class MainActivity : AppCompatActivity() , View.OnClickListener, IdentifyFeature.DialogListener{
@@ -57,6 +58,9 @@ class MainActivity : AppCompatActivity() , View.OnClickListener, IdentifyFeature
     lateinit var mapPoint: Point
     lateinit var isAdminMode: String
     private lateinit var  strings1: Array<String>
+private lateinit var stringsList:ArrayList<String>
+
+    private lateinit var stringArrr: Array<String>
 
     private val requestCode = 2
     var reqPermissions = arrayOf(
@@ -69,13 +73,14 @@ class MainActivity : AppCompatActivity() , View.OnClickListener, IdentifyFeature
         setContentView(R.layout.activity_main)
 
 
-        initSearch()
+
        // initDatabase()
         initMap()
         registerChangeBasemap()
         registerCurrentLocation()
         updateOnTouchListener()
         displayPoints()
+        initSearch()
 
 
         supportActionBar?.apply {
@@ -92,7 +97,34 @@ class MainActivity : AppCompatActivity() , View.OnClickListener, IdentifyFeature
     }
 
     private fun initSearch(){
-        strings1 = arrayOf("Asia","Australia","America","Belgium","Brazil","Canada","California","Dubai","France","Paris")
+
+
+        var stringsl: ArrayList<String>?
+        var stringsll: List<String>? = ArrayList()
+        val list: ArrayList<String> = ArrayList()
+
+
+
+
+        stringsll=null
+        val sr:String ="haha"
+        list.add(sr)
+        var s1 = list?.get(0)
+        var lsize = list?.size
+        print("Size is "+lsize)
+
+        /*strings1 = arrayOf("Asia","Australia","America","Belgium","Brazil","Canada","California","Dubai","France","Paris")*/
+        val res = dbHelper.allDataBuilding
+
+        while (res.moveToNext()) {
+
+            list?.add(res.getString(4))
+
+        }
+
+        /*stringArrr = stringsl.toArray()*/
+        /*showDialog("Data Listing", buffer.toString())*/
+        /*strings1 = arrayOf("Asia","Australia","America","Belgium","Brazil","Canada","California","Dubai","France","Paris")*/
         // Get the XML configured vales into the Activity and stored into an String Array
         //strings = getResources().getStringArray(R.array.countries);
         /* Pass three parameters to the ArrayAdapter
@@ -101,7 +133,7 @@ class MainActivity : AppCompatActivity() , View.OnClickListener, IdentifyFeature
            which are available in android.R.layout
         3. The objects to represent in the values
         */
-        val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, strings1)
+val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, list)
         actv2.setAdapter(adapter)
         actv2.threshold = 1
 
@@ -172,8 +204,6 @@ class MainActivity : AppCompatActivity() , View.OnClickListener, IdentifyFeature
         if (isAdminMode=="y"){
             editOptions.visibility = View.VISIBLE
         }
-
-
 
     }
 
@@ -334,7 +364,6 @@ class MainActivity : AppCompatActivity() , View.OnClickListener, IdentifyFeature
                                 // get size of list in results
                                 val identifyResultSize = graphic.size
                                 if (!graphic.isEmpty()) { // show a toast message if graphic was returned
-
 
                                     val dialogFragment = IdentifyFeature()
                                     val bundle = Bundle()
@@ -648,7 +677,6 @@ class MainActivity : AppCompatActivity() , View.OnClickListener, IdentifyFeature
         displayPoints()
         editOptions.clearCheck()
         super.onResume()
-
         mMapView.resume()
     }
     override fun onDestroy() {
