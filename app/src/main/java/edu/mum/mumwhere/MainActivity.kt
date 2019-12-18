@@ -35,6 +35,7 @@ import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol
 import com.esri.arcgisruntime.symbology.TextSymbol
 import edu.mum.mumwhere.Models.Building
+import edu.mum.mumwhere.Models.Login
 import edu.mum.mumwhere.spinner.ItemData
 import edu.mum.mumwhere.spinner.SpinnerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
@@ -64,19 +65,20 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         //Code : Adnan : For DataBase Inintialization
-        var data:Building=Building(1,"google.com",23.22,34.43,"Argiru","Eating")
-        var data1:Building=Building(1,"ADNAN.com",323.22,53.43,"STUDENT LOUNGE","ENTERTAINMENT")
-        var data2:Building=Building(1,"YOUSEF.com",232.22,34.43,"BUILDING144","LIVING")
-        var data3:Building=Building(1,"SIBTAIN.com",656.22,223.43,"BUILDING141","LIVING")
-        dbHelper.insertDataintoLogin()
-        dbHelper.insertdataintoBuilding(data)
-        dbHelper.insertdataintoBuilding(data1)
-        dbHelper.insertdataintoBuilding(data2)
-        dbHelper.insertdataintoBuilding(data3)
+        //var data:Building=Building("Argiru","Eating","google.com",23.22,34.43)
+       // var data1:Building=Building("Argiru","Eating","google.com",23.22,34.43)
+       // var data2:Building=Building("Argiru","Eating","google.com",23.22,34.43)
+       // var data3:Building=Building("Argiru","Eating","google.com",23.22,34.43)
+       // var adminobj:Login=Login("admin","admin")
+       // dbHelper.insertDataintoLogin(adminobj)
+        //dbHelper.insertdataintoBuilding(data)
+        //dbHelper.insertdataintoBuilding(data1)
+       // dbHelper.insertdataintoBuilding(data2)
+        //dbHelper.insertdataintoBuilding(data3)
         //dbHelper.insertdataintoOffice("Clerk",2)
         //dbHelper.insertdataintoClassroom("WAP","VERILHALL",3)
         //dbHelper.insertdataintoPOI("Entertainment",3)
-        Log.d("Insert data manually","message")
+        //Log.d("Insert data manually","message")
         //End here
         initMap()
         registerChangeBasemap()
@@ -422,6 +424,8 @@ class MainActivity : AppCompatActivity() {
     ) { // create default attributes for the feature
 
         var i = Intent(this, EditorActivity::class.java)
+        i.putExtra("mappointx",mapPoint.x)
+        i.putExtra("mappointy",mapPoint.y)
         startActivityForResult(i, 1)
 
 

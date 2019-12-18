@@ -1,79 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_login"
+    android:orientation="vertical">
 
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="49dp" />
 
-    <TextView
-        android:id="@+id/textView6"
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="49dp" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="49dp" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="49dp" />
+
+    <EditText
+        android:id="@+id/name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20sp"
-        android:gravity="center"
-        android:text="@string/addBuildingTitle"
-        android:textSize="25sp" />
+        android:layout_margin="20dp"
+        android:background="@drawable/et_bg"
+        android:hint="@string/build_name"
+        android:inputType="text"
+        android:padding="16dp"
+        android:textColorHint="@color/login_form_details" />
 
-    <LinearLayout
+    <EditText
+        android:id="@+id/desc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10sp"
-        android:orientation="horizontal"
-        android:weightSum="2">
+        android:layout_margin="20dp"
+        android:background="@drawable/et_bg"
 
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/building_name" />
+        android:hint="@string/build_desc"
+        android:inputType="text"
+        android:padding="16dp"
+        android:textColorHint="@color/login_form_details" />
 
-        <EditText
-            android:id="@+id/username"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="4dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginRight="4dp"
-            android:layout_marginBottom="4dp"
-            android:layout_weight="1"
-            android:inputType="textEmailAddress" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10sp"
-        android:orientation="horizontal"
-        android:weightSum="2">
-
-        <TextView
-            android:id="@+id/textView5"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="col 2" />
-
-        <EditText
-            android:id="@+id/password"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="4dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginRight="4dp"
-            android:layout_marginBottom="16dp"
-            android:layout_weight="1"
-            android:fontFamily="sans-serif"
-            android:hint="@string/password"
-            android:inputType="textPassword" />
-
-    </LinearLayout>
 
     <Button
-        android:id="@+id/addBtn"
+        android:id="@+id/button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/add" />
+        android:layout_marginTop="16dp"
+        android:background="@drawable/btn_bg"
+        android:onClick="login"
+        android:padding="20dp"
+        android:textAllCaps="false"
+        android:textColor="@color/login_form_details_medium"
+        android:text="Add" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
 
 </LinearLayout>
