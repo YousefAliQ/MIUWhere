@@ -28,10 +28,10 @@ class EditorActivity : AppCompatActivity() {
             Log.d("buildingdata","success")
             finish()
         }
-
     }
     fun emptyfields(){
         name.setText("")
         desc.setText("")
     }
+
 }

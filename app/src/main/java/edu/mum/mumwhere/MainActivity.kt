@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity() , View.OnClickListener, IdentifyFeature
 
 
         initSearch()
-        initDatabase()
+       // initDatabase()
         initMap()
         registerChangeBasemap()
         registerCurrentLocation()
@@ -173,6 +173,8 @@ class MainActivity : AppCompatActivity() , View.OnClickListener, IdentifyFeature
             editOptions.visibility = View.VISIBLE
         }
 
+
+
     }
 
     /**
@@ -213,7 +215,8 @@ class MainActivity : AppCompatActivity() , View.OnClickListener, IdentifyFeature
 
         // add/delete/update a new feature if its on the edit mode.
         if (rbAddFeature.isChecked){
-            addFeature(mapPoint)
+
+            addFeature()
         }else if (rbUpdateFeature.isChecked){
             // TODO : implement update feature
 
@@ -547,15 +550,12 @@ class MainActivity : AppCompatActivity() , View.OnClickListener, IdentifyFeature
      * @param mapPoint     location to add feature
      * @param featureTable service feature table to add feature
      */
-    private fun addFeature(
-        mapPoint: com.esri.arcgisruntime.geometry.Point
-    ) { // create default attributes for the feature
+    private fun addFeature() { // create default attributes for the feature
 
         var i = Intent(this, EditorActivity::class.java)
+        i.putExtra("mappointx",mapPoint.x)
+        i.putExtra("mappointy",mapPoint.y)
         startActivityForResult(i, 1)
-
-
-
     }
 
 
@@ -645,8 +645,10 @@ class MainActivity : AppCompatActivity() , View.OnClickListener, IdentifyFeature
         mMapView.pause()
     }
     override fun onResume() {
-        super.onResume()
         displayPoints()
+        editOptions.clearCheck()
+        super.onResume()
+
         mMapView.resume()
     }
     override fun onDestroy() {
