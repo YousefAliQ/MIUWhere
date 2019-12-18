@@ -646,6 +646,7 @@ class MainActivity : AppCompatActivity() , View.OnClickListener, IdentifyFeature
     }
     override fun onResume() {
         super.onResume()
+        displayPoints()
         mMapView.resume()
     }
     override fun onDestroy() {

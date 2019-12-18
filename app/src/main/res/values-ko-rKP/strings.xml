@@ -42,6 +42,8 @@
     <string name="dont_have_an_account">계정이 없습니까?</string>
     <string name="sign_in_with_facebook">페이스 북으로 로그인</string>
     <string name="or">또는</string>
+    <string name="build_name">Name</string>
+    <string name="build_desc">Description address</string>
 
 
     <string name="add">더하다</string>
