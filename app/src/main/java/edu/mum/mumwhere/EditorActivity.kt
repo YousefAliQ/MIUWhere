@@ -88,5 +88,5 @@ class EditorActivity : AppCompatActivity() {
         name.setText("")
         desc.setText("")
     }
-
+//satring checking for checkin code
 }
