@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() , View.OnClickListener, IdentifyFeature
 
     internal var dbHelper = DatabaseHelper(this)
     private lateinit var mNavigationDrawerItemTitles: Array<String>
-    private val wgs84 = SpatialReference.create(4236)
+    private val wgs84 = SpatialReference.create(3857)
     private lateinit var mMapView: MapView
     private var mLocationDisplay: LocationDisplay? = null
     var graphicsOverlay: GraphicsOverlay? = null
@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() , View.OnClickListener, IdentifyFeature
     lateinit var mapPoint: Point
     lateinit var isAdminMode: String
     private lateinit var  strings1: Array<String>
-private lateinit var stringsList:ArrayList<String>
+    private lateinit var stringsList:ArrayList<String>
 
     private lateinit var stringArrr: Array<String>
 
@@ -74,9 +74,8 @@ private lateinit var stringsList:ArrayList<String>
 
 
 
-        initDatabase()
+        // initDatabase()
         initMap()
-
         registerChangeBasemap()
         registerCurrentLocation()
         updateOnTouchListener()
@@ -134,14 +133,13 @@ private lateinit var stringsList:ArrayList<String>
            which are available in android.R.layout
         3. The objects to represent in the values
         */
-val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, list)
+        val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, list)
         actv2.setAdapter(adapter)
         actv2.threshold = 1
 
         actv2.onItemClickListener =
             AdapterView.OnItemClickListener { parent, view, position, id ->
                 Toast.makeText(this,"Item selected is " + parent.getItemAtPosition(position),Toast.LENGTH_LONG).show()
-
 
                 val iName:String = parent.getItemAtPosition(position).toString()
 
@@ -166,10 +164,8 @@ val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, l
                 val point = Point(x,y)
                 mMapView.setViewpointCenterAsync(point)
 
-                /*mLocationDisplay?.setAutoPanMode(LocationDisplay.AutoPanMode.RECENTER)*/
+               /* mLocationDisplay?.setAutoPanMode(LocationDisplay.AutoPanMode.RECENTER)*/
                 if (!mLocationDisplay!!.isStarted()) mLocationDisplay?.startAsync()
-
-
 
             }
     }
@@ -179,8 +175,10 @@ val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, l
         //Code : Adnan : For DataBase Inintialization
         var data:Building=Building("Argiro","Student Center","image_url",41.01614713668823,-91.96762561798096)
         var data1:Building=Building("Argiro","Student Center","image_url",41.0161471366844,-91.96762561798096)
-        var data2:Building=Building("Argiro","Student Center","image_url",41.0161471366822,-91.96762561798096)
+        var data2:Building=Building("RecCenter","Student Play","image_url",41.017174,-91.9646693)
         var data3:Building=Building("Argiro","Student Center","image_url",41.01614713668999,-91.96762561798096)
+        var data4:Building=Building("Rec Center","Student Play","image_url",41.017174,-91.9646693)
+
 
         //dbHelper.insertDataintoLogin()
         dbHelper.insertdataintoBuilding(data)
@@ -188,6 +186,8 @@ val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, l
         dbHelper.insertdataintoBuilding(data1)
         dbHelper.insertdataintoBuilding(data2)
         dbHelper.insertdataintoBuilding(data3)
+        dbHelper.insertdataintoBuilding(data4)
+
         //dbHelper.insertdataintoOffice("Clerk",2)
         //dbHelper.insertdataintoClassroom("WAP","VERILHALL",3)
         //dbHelper.insertdataintoPOI("Entertainment",3)
@@ -275,7 +275,8 @@ val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, l
 
         // add/delete/update a new feature if its on the edit mode.
         if (rbAddFeature.isChecked){
-            addFeature(mapPoint)
+
+            addFeature()
         }else if (rbUpdateFeature.isChecked){
             // TODO : implement update feature
 
@@ -608,15 +609,12 @@ val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, l
      * @param mapPoint     location to add feature
      * @param featureTable service feature table to add feature
      */
-    private fun addFeature(
-        mapPoint: com.esri.arcgisruntime.geometry.Point
-    ) { // create default attributes for the feature
+    private fun addFeature() { // create default attributes for the feature
 
         var i = Intent(this, EditorActivity::class.java)
+        i.putExtra("mappointx",mapPoint.x)
+        i.putExtra("mappointy",mapPoint.y)
         startActivityForResult(i, 1)
-
-
-
     }
 
 
@@ -706,6 +704,8 @@ val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, l
         mMapView.pause()
     }
     override fun onResume() {
+        displayPoints()
+        editOptions.clearCheck()
         super.onResume()
         mMapView.resume()
     }

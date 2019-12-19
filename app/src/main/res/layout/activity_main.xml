@@ -16,6 +16,24 @@
 
 
     <Spinner
+        android:id="@+id/basemap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="false"
+
+
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="false"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="28dp"
+
+        android:background="#00000000"
+        android:gravity="center_horizontal|left|center_vertical"
+        android:overlapAnchor="false"
+        android:popupBackground="#00000000" />
+
+    <Spinner
         android:id="@+id/spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -24,42 +42,20 @@
         android:layout_marginBottom="22dp"
         android:background="#00000000"
         android:overlapAnchor="false"
-        android:popupBackground="#00000000" />
-
+        android:popupBackground="#00000000"
+        />
 
     <AutoCompleteTextView
         android:id="@+id/actv2"
-        android:hint="Search Here"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="60dp"
-        />
-
-    <Spinner
-        android:id="@+id/basemap"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="false"
-
-
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="42dp"
-
-
-
-        android:layout_alignParentRight="false"
-        android:layout_marginStart="22dp"
-        android:layout_marginTop="22dp"
-        android:layout_marginEnd="22dp"
-
-        android:background="#00000000"
-        android:gravity="center_horizontal|left|center_vertical"
-        android:overlapAnchor="false"
-        android:popupBackground="#00000000" />
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:focusable="auto"
+        android:hint="Search Here"
+        android:selectAllOnFocus="false"
+        android:textColor="#FFFFFF" />
 
     <LinearLayout
         android:layout_width="wrap_content"
