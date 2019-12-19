@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity() , View.OnClickListener, IdentifyFeature
 
 
 
-        initDatabase()
+        //initDatabase()
         initMap()
         registerChangeBasemap()
         registerCurrentLocation()
@@ -146,6 +146,32 @@ class MainActivity : AppCompatActivity() , View.OnClickListener, IdentifyFeature
         actv2.onItemClickListener =
             AdapterView.OnItemClickListener { parent, view, position, id ->
                 Toast.makeText(this,"Item selected is " + parent.getItemAtPosition(position),Toast.LENGTH_LONG).show()
+
+                val iName:String = parent.getItemAtPosition(position).toString()
+
+                var x:Double = 0.0
+
+                var y:Double = 0.0
+
+                val res = dbHelper.allDataBuilding
+
+                while (res.moveToNext()) {
+
+                    if (res.getString(4) == iName) {
+                        x = res.getDouble(3).toDouble()
+                        y = res.getDouble(2).toDouble()
+                        break
+                    }
+
+
+                }
+
+
+                val point = Point(x,y)
+                mMapView.setViewpointCenterAsync(point)
+
+                /* mLocationDisplay?.setAutoPanMode(LocationDisplay.AutoPanMode.RECENTER)*/
+                if (!mLocationDisplay!!.isStarted()) mLocationDisplay?.startAsync()
 
             }
     }
