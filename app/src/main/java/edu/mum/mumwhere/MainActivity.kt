@@ -142,6 +142,24 @@ val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, l
             AdapterView.OnItemClickListener { parent, view, position, id ->
                 Toast.makeText(this,"Item selected is " + parent.getItemAtPosition(position),Toast.LENGTH_LONG).show()
 
+
+                var itemName = parent.getItemAtPosition(position)
+                var x:Double? =0.0
+                var y:Double? =0.0
+
+
+                while (res.moveToNext()) {
+
+                    if (itemName == res.getString(4)){
+                        x=res.getDouble(2)
+                        y=res.getDouble(3)
+                    }
+
+                    mLocationDisplay?.setAutoPanMode(LocationDisplay.AutoPanMode.RECENTER)
+                    if (!mLocationDisplay!!.isStarted()) mLocationDisplay?.startAsync()
+
+                }
+
             }
     }
 
