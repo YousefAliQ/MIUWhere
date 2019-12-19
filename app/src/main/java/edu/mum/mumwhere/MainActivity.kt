@@ -227,13 +227,13 @@ class MainActivity : AppCompatActivity() , View.OnClickListener, IdentifyFeature
 
         val geti = intent
 
-        isAdminMode = geti.getStringExtra("isLogin")?: ""
+        //isAdminMode = geti.getStringExtra("isLogin")?: ""
 
         val spfr = getSharedPreferences("login",Context.MODE_PRIVATE)
         val name= spfr.getString("username","")
-        val check = spfr.getString("isLogin","")
+        isAdminMode = spfr.getString("isLogin","").toString()
 
-        if (check=="y"){
+        if (isAdminMode=="y"){
             editOptions.visibility = View.VISIBLE
         }
 
