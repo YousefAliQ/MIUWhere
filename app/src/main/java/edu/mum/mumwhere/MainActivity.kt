@@ -128,6 +128,18 @@ class MainActivity : AppCompatActivity() , View.OnClickListener, IdentifyFeature
 
         }
 
+        val classes = dbHelper.allDataClassrooms
+
+        try{
+            while (classes.moveToNext()) {
+                list?.add(classes.getString(1))
+            }
+        }catch(excep: Exception){
+
+        }
+
+
+
         /*stringArrr = stringsl.toArray()*/
         /*showDialog("Data Listing", buffer.toString())*/
         /*strings1 = arrayOf("Asia","Australia","America","Belgium","Brazil","Canada","California","Dubai","France","Paris")*/
@@ -766,6 +778,7 @@ class MainActivity : AppCompatActivity() , View.OnClickListener, IdentifyFeature
     override fun onResume() {
         displayPoints()
         editOptions.clearCheck()
+        initSearch()
         super.onResume()
         mMapView.resume()
     }
