@@ -19,7 +19,7 @@ class EditorActivity : AppCompatActivity() {
         val lat=intent.getDoubleExtra("mappointy",0.0)
         val long=intent.getDoubleExtra("mappointx",0.0)
         setContentView(R.layout.activity_editor)
-        button.setOnClickListener{
+        addClassroom.setOnClickListener{
         var name1=name.text.toString()
         var desc1=desc.text.toString()
             var data:Building=Building(name1,desc1,"google.com",lat,long)

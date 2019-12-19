@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -51,13 +52,19 @@ class IdentifyFeature: DialogFragment()
         override fun onViewCreated(view:View, savedInstanceState: Bundle?) {
 
 
-
+            var id = arguments?.getString("id")
             name.text =  "Building Name : " +  arguments?.getString("name")
             desc.text = "Building Name : "  +  arguments?.getString("desc")
 
             val btnClassroom = view.findViewById<Button>(R.id.btnClassroom)
             btnClassroom.setOnClickListener(object: View.OnClickListener {
                 override fun onClick(view:View) {
+
+                    var i = Intent(context, ListOfActivity::class.java)
+                    i.putExtra("calledBy", "classrooms")
+                    i.putExtra("build_id", id)
+                    startActivityForResult(i, 1)
+
                     dismiss()
                 }
             })
@@ -65,6 +72,12 @@ class IdentifyFeature: DialogFragment()
             val btnOffices = view.findViewById<Button>(R.id.btnOffices)
             btnOffices.setOnClickListener(object: View.OnClickListener {
                 override fun onClick(view:View) {
+
+                    var i = Intent(context, ListOfActivity::class.java)
+                    i.putExtra("calledBy", "offices")
+                    i.putExtra("build_id", id)
+                    startActivityForResult(i, 1)
+
                     dismiss()
                 }
             })
@@ -72,6 +85,12 @@ class IdentifyFeature: DialogFragment()
             val btnServices = view.findViewById<Button>(R.id.btnServices)
             btnServices.setOnClickListener(object: View.OnClickListener {
                 override fun onClick(view:View) {
+
+                    var i = Intent(context, ListOfActivity::class.java)
+                    i.putExtra("calledBy", "services")
+                    i.putExtra("build_id", id)
+                    startActivityForResult(i, 1)
+
                     dismiss()
                 }
             })

@@ -27,11 +27,11 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
        db.execSQL("CREATE TABLE $TABLE_BUILDING (BUILD_ID INTEGER PRIMARY KEY " +
                "AUTOINCREMENT,IMAGE TEXT,LATITUDE TEXT,LONGITUDE TEXT,NAME TEXT,DESC TEXT)")
        db.execSQL("CREATE TABLE $TABLE_OFFICE (ID INTEGER PRIMARY KEY " +
-                "AUTOINCREMENT,CATEGORY TEXT,BUILD_ID INTEGER,FOREIGN KEY(BUILD_ID) REFERENCES $TABLE_BUILDING(ID))")
+                "AUTOINCREMENT,CATEGORY TEXT,CONTACT TEXT,NUMBER TEXT,PERSON_NAME TEXT,EMAIL TEXT,HOURS TEXT,BUILD_ID INTEGER,FOREIGN KEY(BUILD_ID) REFERENCES $TABLE_BUILDING(ID))")
         db.execSQL("CREATE TABLE $TABLE_CLASSROOM (ID INTEGER PRIMARY KEY " +
-                "AUTOINCREMENT,CURR_COURSE TEXT,CURR_INST_LOCATION TEXT,BUILD_ID INTEGER,FOREIGN KEY(BUILD_ID) REFERENCES $TABLE_BUILDING(ID))")
+                "AUTOINCREMENT,CURR_COURSE TEXT, DESC TEXT,CURR_INST_LOCATION TEXT,BUILD_ID INTEGER,FOREIGN KEY(BUILD_ID) REFERENCES $TABLE_BUILDING(ID))")
         db.execSQL("CREATE TABLE $TABLE_POI (ID INTEGER PRIMARY KEY " +
-                "AUTOINCREMENT,SERVICE_TYPE TEXT,BUILD_ID INTEGER,FOREIGN KEY(BUILD_ID) REFERENCES $TABLE_BUILDING(ID))")
+                "AUTOINCREMENT,SERVICE_TYPE TEXT,SERVICE_NAME TEXT,SERVICE_DESC TEXT,BUILD_ID INTEGER,FOREIGN KEY(BUILD_ID) REFERENCES $TABLE_BUILDING(ID))")
         Log.d("Database Table", "Table created");
     }
 
@@ -75,6 +75,11 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         // Second argument - want to insert any column value nullable
         db.insert(TABLE_BUILDING, null, contentValues)
     }
+    fun deletedatafromBuilding( id:String):Int{
+        val db=this.writableDatabase
+        return db.delete(TABLE_BUILDING,"BUILD_ID = ?", arrayOf(id))
+     }
+
     fun insertdataintoOffice(obj:Office){
         val db=this.writableDatabase
         val contentValues = ContentValues()
@@ -87,6 +92,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         val db=this.writableDatabase
         val contentValues = ContentValues()
         contentValues.put(KEY_CURR_COURSE, obj.curr_course)
+        contentValues.put(KEY_BUILD_TYPE, obj.desc)
         contentValues.put(KEY_CURR_INSTRUCTOR_LOC, obj.curr_instructor_loc)
         contentValues.put(KEY_BUILDING_ID, obj.building_id)
         // Second argument - want to insert any column value nullable
@@ -127,6 +133,26 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
             val res = db.rawQuery("SELECT * FROM " + TABLE_BUILDING, null)
             return res
         }
+
+    //READING ALL DATA
+    val allDataClassrooms : Cursor
+        get() {
+            val db = this.writableDatabase
+            val res = db.rawQuery("SELECT * FROM " + TABLE_CLASSROOM, null)
+            return res
+        }
+
+    fun selectClassroom(eid:String):Cursor{
+        // val q = "SELECT * FROM " + TABLE_NAME + " WHERE id =" + eid
+        val q = "SELECT * FROM " + TABLE_CLASSROOM + " WHERE BUILD_ID =" + Integer.parseInt(eid)
+        val db = this.readableDatabase
+        // Execute your SQL query
+        val k = db.rawQuery(q, null)
+        k.moveToNext()
+        return k
+    }
+
+
     /**
      * Let's create  a method to update a row with new field values.
      */

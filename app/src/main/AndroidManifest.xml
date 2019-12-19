@@ -17,6 +17,11 @@
         android:roundIcon="@mipmap/roundedicon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".LocationsListActivity"></activity>
+        <activity android:name=".ListOfActivity" />
+        <activity android:name=".ServicesActivity" />
+        <activity android:name=".OfficesActivity" />
+        <activity android:name=".ClassroomsActivity" />
         <activity android:name=".EditorActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".RouteActivity" />
@@ -25,13 +30,11 @@
         <activity android:name=".ScanQrAct" />
         <activity android:name=".ScanMainActivity" />
         <activity android:name=".SearchActivity" />
-        <activity android:name=".SearchResultsActivity" >
+        <activity android:name=".SearchResultsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
         </activity>
-
-
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden">
@@ -41,9 +44,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-            <meta-data android:name="android.app.searchable"
+            <meta-data
+                android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
-
         </activity>
     </application>
 

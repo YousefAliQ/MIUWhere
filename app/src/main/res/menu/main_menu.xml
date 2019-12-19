@@ -9,6 +9,10 @@
         android:title="@string/login_menu"
         app:showAsAction="never"/>
     <item
+        android:id="@+id/m5"
+        android:title="@string/logout_menu"
+        app:showAsAction="never"/>
+    <item
         android:id="@+id/m2"
         android:title="@string/route_menu"
         app:showAsAction="never"/>

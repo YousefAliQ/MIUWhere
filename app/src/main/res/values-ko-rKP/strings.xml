@@ -91,6 +91,23 @@
     <string name = "Topographic">Topographic</string>
     <string name = "TopographicVector">TopographicVector</string>
 
+    <string name ="DESC">DESC</string>
+    <string name ="CURR_COURSE">CURRENT COURSE</string>
+    <string name ="CURR_INST_LOCATION">CURRENT INSTRUCTOR</string>
+
+    <string name ="SERVICE_NAME">SERVICE NAME</string>
+    <string name ="SERVICE_DESC">SERVICE DESC</string>
+    <string name ="SERVICE_TYPE">SERVICE TYPE</string>
+    <string name ="BUILD_ID">BUILD ID</string>
+    <string name="logout_menu">Logout</string>
+
+    <string name = "HOURS">HOURS</string>
+    <string name = "EMAIL">EMAIL</string>
+    <string name = "PERSON_NAME">PERSON_NAME</string>
+    <string name = "NUMBER">NUMBER</string>
+    <string name = "CONTACT">CONTACT</string>
+    <string name = "CATEGORY">CATEGORY</string>
+
 
 
     <string name="addBuildingTitle"> 새 건물 추가</string>

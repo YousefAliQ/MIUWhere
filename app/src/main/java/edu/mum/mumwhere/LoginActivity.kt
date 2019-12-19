@@ -25,6 +25,7 @@ class LoginActivity : AppCompatActivity() {
         val name = spf.getString("name", "")
         val pwd = spf.getString("pass", "")
         val isLogged = spf.getString("isL","")
+
         et1.setText(name)
         et2.setText(pwd)
         var user1 :User = User("yousef", "ali", "admin", "admin")
@@ -52,6 +53,7 @@ class LoginActivity : AppCompatActivity() {
                     val i = Intent (this, MainActivity::class.java)
 
                     var spe=spf.edit()
+
 
                     spe.putString("isLogin","y")
                     spe.apply()

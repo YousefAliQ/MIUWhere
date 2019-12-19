@@ -7,6 +7,7 @@ import android.app.Activity
 import android.app.ProgressDialog.show
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Color
@@ -27,8 +28,10 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import com.esri.arcgisruntime.geometry.DatumTransformation
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.SpatialReference
+import com.esri.arcgisruntime.geometry.TransformationCatalog
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.view.*
@@ -37,6 +40,7 @@ import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol
 import com.esri.arcgisruntime.symbology.TextSymbol
 import edu.mum.mumwhere.Models.Building
+import edu.mum.mumwhere.Models.Classrooms
 import edu.mum.mumwhere.spinner.ItemData
 import edu.mum.mumwhere.spinner.SpinnerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
@@ -49,7 +53,7 @@ class MainActivity : AppCompatActivity() , View.OnClickListener, IdentifyFeature
 
     internal var dbHelper = DatabaseHelper(this)
     private lateinit var mNavigationDrawerItemTitles: Array<String>
-    private val wgs84 = SpatialReference.create(4236)
+    private val wgs84 = SpatialReference.create(3857)
     private lateinit var mMapView: MapView
     private var mLocationDisplay: LocationDisplay? = null
     var graphicsOverlay: GraphicsOverlay? = null
@@ -57,8 +61,10 @@ class MainActivity : AppCompatActivity() , View.OnClickListener, IdentifyFeature
     private var mBasemap: Spinner? = null
     lateinit var mapPoint: Point
     lateinit var isAdminMode: String
+    lateinit var spf: SharedPreferences
+
     private lateinit var  strings1: Array<String>
-private lateinit var stringsList:ArrayList<String>
+    private lateinit var stringsList:ArrayList<String>
 
     private lateinit var stringArrr: Array<String>
 
@@ -74,7 +80,7 @@ private lateinit var stringsList:ArrayList<String>
 
 
 
-       // initDatabase()
+        initDatabase()
         initMap()
         registerChangeBasemap()
         registerCurrentLocation()
@@ -133,7 +139,7 @@ private lateinit var stringsList:ArrayList<String>
            which are available in android.R.layout
         3. The objects to represent in the values
         */
-val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, list)
+        val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, list)
         actv2.setAdapter(adapter)
         actv2.threshold = 1
 
@@ -154,10 +160,36 @@ val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, l
 
         //dbHelper.insertDataintoLogin()
         dbHelper.insertdataintoBuilding(data)
-
         dbHelper.insertdataintoBuilding(data1)
         dbHelper.insertdataintoBuilding(data2)
         dbHelper.insertdataintoBuilding(data3)
+
+/*
+
+        db.execSQL("CREATE TABLE $TABLE_OFFICE (ID INTEGER PRIMARY KEY " +
+                "AUTOINCREMENT,CATEGORY TEXT,CONTACT TEXT,NUMBER TEXT,PERSON_NAME TEXT,EMAIL TEXT,HOURS TEXT,BUILD_ID INTEGER,FOREIGN KEY(BUILD_ID) REFERENCES $TABLE_BUILDING(ID))")
+
+        db.execSQL("CREATE TABLE $TABLE_CLASSROOM (ID INTEGER PRIMARY KEY " +
+                "AUTOINCREMENT,CURR_COURSE TEXT, DESC TEXT,CURR_INST_LOCATION TEXT,BUILD_ID INTEGER,FOREIGN KEY(BUILD_ID) REFERENCES $TABLE_BUILDING(ID))")
+
+        db.execSQL("CREATE TABLE $TABLE_POI (ID INTEGER PRIMARY KEY " +
+                "AUTOINCREMENT,SERVICE_TYPE TEXT,SERVICE_NAME TEXT,SERVICE_DESC TEXT,BUILD_ID INTEGER,FOREIGN KEY(BUILD_ID) REFERENCES $TABLE_BUILDING(ID))")
+
+*/
+
+        var classRoom:Classrooms= Classrooms( "MDP","Android/Kotlin Course. Room #233", "Dr. Renuka ", 1)
+        var classRoom1:Classrooms= Classrooms( "MDP","Android/Kotlin Course. Room #233", "Dr. Renuka ", 1)
+        var classRoom2:Classrooms= Classrooms( "MDP","Android/Kotlin Course. Room #233", "Dr. Renuka ", 1)
+        var classRoom3:Classrooms= Classrooms( "MDP","Android/Kotlin Course. Room #233", "Dr. Renuka ", 1)
+
+        //dbHelper.insertDataintoLogin()
+        dbHelper.insertdataintoClassroom(classRoom)
+        dbHelper.insertdataintoClassroom(classRoom1)
+        dbHelper.insertdataintoClassroom(classRoom2)
+        dbHelper.insertdataintoClassroom(classRoom3)
+
+
+
         //dbHelper.insertdataintoOffice("Clerk",2)
         //dbHelper.insertdataintoClassroom("WAP","VERILHALL",3)
         //dbHelper.insertdataintoPOI("Entertainment",3)
@@ -182,8 +214,8 @@ val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, l
         mMapView = findViewById(R.id.mapView) as MapView
 
 
-        val map = ArcGISMap(Basemap.Type.IMAGERY,41.01614713668823,-91.96762561798096, 17)
 
+        val map = ArcGISMap(Basemap.Type.IMAGERY,41.01614713668823,-91.96762561798096, 17)
         // add graphics overlay to MapView.
         graphicsOverlay = addGraphicsOverlay(mMapView)
 
@@ -201,9 +233,11 @@ val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, l
         val name= spfr.getString("username","")
         val check = spfr.getString("isLogin","")
 
-        if (isAdminMode=="y"){
+        if (check=="y"){
             editOptions.visibility = View.VISIBLE
         }
+
+        spf = getSharedPreferences("login", Context.MODE_PRIVATE)
 
     }
 
@@ -246,7 +280,16 @@ val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, l
         // add/delete/update a new feature if its on the edit mode.
         if (rbAddFeature.isChecked){
 
-            addFeature()
+            val point = android.graphics.Point(event.x.toInt(), event.y.toInt())
+            val location: com.esri.arcgisruntime.geometry.Point = mMapView.screenToLocation(point)
+
+            //val defaultTransform = TransformationCatalog.get.getTransformation(mMapView.spatialReference, wgs84,location)
+
+
+            var tempPoint: com.esri.arcgisruntime.geometry.Point = Point(location.x, location.y,location.spatialReference)
+
+
+            addFeature(tempPoint)
         }else if (rbUpdateFeature.isChecked){
             // TODO : implement update feature
 
@@ -309,6 +352,14 @@ val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, l
                     val identifyResultSize = graphics.size
                     if (!graphics.isEmpty()) { // show a toast message if graphic was returned
 
+
+
+                        var dbHelper = DatabaseHelper(applicationContext)
+                        var result = dbHelper.deletedatafromBuilding(graphicsOverlay!!.graphics[0].attributes.get("BUILD_ID").toString())
+
+                        if (graphicsOverlay!!.graphics[1] != null)
+                        dbHelper.deletedatafromBuilding(graphicsOverlay!!.graphics[1].attributes.get("BUILD_ID").toString())
+
                         graphicsOverlay!!.graphics.removeAll(graphics)
 
                         Toast.makeText(
@@ -339,7 +390,9 @@ val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, l
                     mapPoint =
                         mMapView.screenToLocation(point)
 
-                    if (isAdminMode == "y")
+                    if (isAdminMode == "y" && (
+                                rbAddFeature.isChecked || rbUpdateFeature.isChecked || rbDeleteFeature.isChecked
+                                ))
                         handleAdminEvents(event,point)
                     else
                     {
@@ -367,6 +420,7 @@ val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, l
 
                                     val dialogFragment = IdentifyFeature()
                                     val bundle = Bundle()
+                                    bundle.putString("id", graphic[0].attributes.get("BUILD_ID").toString())
                                     bundle.putString("name", graphic[0].attributes.get("NAME").toString())
                                     bundle.putString("desc", graphic[0].attributes.get("DESC").toString())
                                     dialogFragment.arguments = bundle
@@ -579,14 +633,14 @@ val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, l
      * @param mapPoint     location to add feature
      * @param featureTable service feature table to add feature
      */
-    private fun addFeature() { // create default attributes for the feature
+    private fun addFeature(tempPoint: com.esri.arcgisruntime.geometry.Point) { // create default attributes for the feature
 
         var i = Intent(this, EditorActivity::class.java)
-        i.putExtra("mappointx",mapPoint.x)
-        i.putExtra("mappointy",mapPoint.y)
+        i.putExtra("mappointx",tempPoint.x)
+        i.putExtra("mappointy",tempPoint.y)
         startActivityForResult(i, 1)
-    }
 
+    }
 
 
 
@@ -635,6 +689,16 @@ val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, l
             startActivity(i)
             return super.onOptionsItemSelected(item)
         }
+
+        if (item.title.toString() == "Logout"){
+
+            var spe=spf.edit()
+            spe.putString("isLogin","")
+            spe.apply()
+            editOptions.visibility = View.INVISIBLE
+            return super.onOptionsItemSelected(item)
+        }
+
 
 
         if (item.title.toString() == "Scan QR"){
