@@ -34,7 +34,9 @@
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginRight="20dp"
+        android:focusable="auto"
         android:hint="Search Here"
+        android:selectAllOnFocus="false"
         android:textColor="#00F5ECEC" />
 
     <Spinner

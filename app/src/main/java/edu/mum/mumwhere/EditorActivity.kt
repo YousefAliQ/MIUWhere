@@ -1,6 +1,6 @@
 package edu.mum.mumwhere
 
-import android.R.attr
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Base64
 import android.util.Log
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import edu.mum.mumwhere.Models.Building
 import kotlinx.android.synthetic.main.activity_editor.*
@@ -87,4 +88,5 @@ class EditorActivity : AppCompatActivity() {
         name.setText("")
         desc.setText("")
     }
+
 }
