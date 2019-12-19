@@ -29,6 +29,11 @@
     <string name="add">Add</string>
     <string name="update">Update</string>
     <string name="delete">Delete</string>
+    <string name="login_menu">Login</string>
+    <string name="route_menu">Route</string>
+    <string name="about_menu">About Us</string>
+    <string name="scan_menu">Scan QR</string>
+    <string name="title_activity_map_and_details">MapAndDetailsActivity</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
@@ -59,7 +64,31 @@
     <string name = "TerrainWithLabelsVector">TerrainWithLabelsVector</string>
     <string name = "Topographic">Topographic</string>
     <string name = "TopographicVector">TopographicVector</string>
+    <string name = "offices">Offices</string>
+    <string name = "services">Services</string>
+    <string name = "classroom">Classroom</string>
+    <string name = "ok">Done</string>
 
 
-    <string name="addBuildingTitle"> Add new Building </string>
+
+    <string name="addBuildingTitle"> ADD NEW BUILDING </string>
+
+
+    <string name="appname">ACTVDemo</string>
+    <string-array name="countries">
+        <item>India</item>
+        <item>Indonasia</item>
+        <item>USA</item>
+        <item>Asia</item>
+        <item>Africa</item>
+        <item>Siria</item>
+        <item>Sri Lanka</item>
+        <item>Canada</item>
+        <item>Koria</item>
+        <item>Island</item>
+        <item>Bangaladesh</item>
+        <item>Nepal</item>
+    </string-array>
+
+
 </resources>
