@@ -114,7 +114,7 @@ there and how that place looks like.
  ▪ Design and implement Search functionality
 ```
 
-## Conclusion with SCI 
+## Conclusion with SCI Principles
 
 ```
  ▪ MIUwhere not only brings its own data, but it also allows the regular users to diversify the data and add any
