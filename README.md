@@ -3,11 +3,12 @@ MIUWhere is an Android demo application to search for facilities, offices, class
 
 ```
 Team Members:
-```
+
 - Yousuf Quran
 - Adnan Shehzad
 - Sibtain Raza
 
+```
 
 ## Agenda
 
