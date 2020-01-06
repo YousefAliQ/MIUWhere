@@ -76,13 +76,13 @@ there and how that place looks like.
 ## Yousef’s Contribution
 
 ```
- ▪ Team Lead and Management
+ ▪ Managed and led the team
 
  ▪ Implemented skeleton code
 
- ▪ Implemented ArcGIS Runtime SDK for Android
+ ▪ Setup ArcGIS Runtime SDK for Android
 
- ▪ Implemented Current Location, Basemaps, Entry forms, and Admin Tools
+ ▪ Implemented Current Location, Basemaps, Entry forms, and Admin Tools.
 
  ▪ Added String Translation I18N and Localization L10N
 ```
