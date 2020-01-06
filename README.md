@@ -1,3 +1,5 @@
+CS473-Mobile Device Programming Dec-2019 at Maharishi International University
+
 # MIUWhere
 MIUWhere is an Android demo application to search for facilities, offices, classrooms and services' places at the Search Results Web Result with Site Links Maharishi International University. This app Used the ArcGIS Runtime SDK for Android / Kotlin From esri.
 
