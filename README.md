@@ -1,5 +1,5 @@
 # MIUWhere
-MIUWhere is an Android demo application to search for facilities, offices, classrooms and services' places at the Search Results Web Result with Site Links Maharishi University of Management. This app Used the ArcGIS Runtime SDK for Android / Kotlin From esri.
+MIUWhere is an Android demo application to search for facilities, offices, classrooms and services' places at the Search Results Web Result with Site Links Maharishi International University. This app Used the ArcGIS Runtime SDK for Android / Kotlin From esri.
 
 ```
 Team Members:
@@ -14,17 +14,13 @@ Team Members:
 ### ▪ Problem
 
 ```
-Most of us had faced issues like finding different places
-when we were new here, like where is Maryam’s office
-or where is Argiro or Where is Rec Center and what is
-offered there and how does it look like.
+Most of students had faced difficulties in finding a different places when they were arrived to campus, like where is registration’s office, where is Argiro building or Where is Rec-Center.
 ```
 ### ▪ Solution
 
 ```
-MIUwherehelps new students in learning about every
-typical places in our campus along with some
-information like what is that place and whose offices are
+MIUwherehelps new students in learning about every typical places in our campus along with some
+information like what is that place for and whose offices are
 there and how that place looks like.
 ```
 
@@ -117,9 +113,12 @@ there and how that place looks like.
 ## Conclusion with SCI Principles
 
 ```
- ▪ MIUwhere not only brings its own data, but it also allows the regular users to diversify the data and add any
-   missing information about any place on campus since knowledge is gained from inside and outside and harmony exists in diversity. 
-   Every user has a location that can be pinpointed and their search can give them a route and every user gets to benefit from the app which tells us that the Whole exists in every part.
+ ▪ MIUwhere not only brings its own data, but it also allows the regular users to diversify the data
+ and add any missing information about any place on campus since knowledge is gained from inside and
+ outside and harmony exists in diversity. 
+ 
+  Every user has a location that can be pinpointed and their search can give them a route and all users
+  gets to benefit from the app which tells us that the Whole exists in every part.
 ```
 
 ## Technologies used?
